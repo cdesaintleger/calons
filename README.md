@@ -1,4 +1,4 @@
-# À niveau — Fiat Ducato
+# Calons
 
 PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
 
@@ -34,7 +34,7 @@ Le workflow définit `VITE_BASE_PATH=/calons/`. Pour reproduire ce build localem
 
 ```sh
 VITE_BASE_PATH=/calons/ npm test
-npm run preview
+VITE_BASE_PATH=/calons/ npm run preview
 # Ouvrir http://localhost:4173/calons/
 ```
 
@@ -65,6 +65,10 @@ HTTPS est nécessaire sur téléphone pour les capteurs et le service worker ; `
 4. Ouvrir l’application installée, activer le mode avion et recharger pour vérifier le cache sur l’appareil cible.
 
 Une mise à jour se prépare en arrière-plan et s’active après fermeture des anciens onglets de l’application. Rouvrir ensuite l’application. Le navigateur peut supprimer son stockage en cas de manque d’espace ; ouvrir alors une fois en ligne. Le badge de connexion dépend du signal fourni par le navigateur et ne teste pas l’accès Internet.
+
+## Interface
+
+Les commandes de mesure sont accessibles dès le premier écran. Les onglets « Vue du véhicule » et « Où placer les cales » partagent la même mesure. Le schéma affiche les corrections théoriques à 0,1 cm près, sans prétendre à cette précision physique. Les roues passent du vert (0 cm) au rouge (hauteur maximale des cales), sur une échelle identique pour les quatre roues. Le placement reste optimisé pour deux cales à paliers de 7 cm ; sa hauteur réalisable est distincte de la correction théorique.
 
 ## Mesure et calibration
 

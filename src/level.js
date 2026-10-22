@@ -49,3 +49,9 @@ export function calibratedAngles(raw, zero) {
   const first=cross(v,b),second=cross(v,first),rotated=b.map((x,i)=>x+first[i]+second[i]/(1+a[2]));
   return {pitch:Math.atan2(rotated[1],rotated[2])/rad,roll:Math.atan2(rotated[0],rotated[2])/rad};
 }
+
+// Fixed scale across all wheels: green at zero, red at the ramp capacity.
+export function correctionColor(cm, capacity) {
+  const ratio = Math.max(0, Math.min(1, cm / capacity));
+  return `hsl(${120 * (1 - ratio)} 65% 42%)`;
+}
