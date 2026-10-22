@@ -122,3 +122,11 @@ quand les événements s’arrêtaient a été supprimé. Sans nouvel événemen
 mesure reste visible et est signalée comme ancienne après trois secondes. Cela
 ne permet pas de distinguer un téléphone immobile d’un capteur interrompu.
 Les critères de stabilité et la fraîcheur requise pour calibrer restent appliqués.
+
+## Version 1.1.3
+
+Relancer le capteur réinstalle son écoute et efface les anciennes mesures. Un changement
+de visibilité invalide aussi les mesures en mémoire. Une mesure conservée sans nouvel
+événement est signalée comme telle. La calibration reste possible après confirmation
+explicite de l’horizontalité et de l’immobilité si la stabilité n’est pas confirmée.
+Aucune calibration n’est possible avant le premier événement valide de la session.
