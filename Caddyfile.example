@@ -1,0 +1,8 @@
+# Remplacer par votre domaine et le chemin absolu du dossier dist.
+niveau.example.com {
+    root * /srv/ducato-level/dist
+    encode zstd gzip
+    header /sw.js Cache-Control "no-cache"
+    header /index.html Cache-Control "no-cache"
+    file_server
+}

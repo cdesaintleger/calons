@@ -1,0 +1,63 @@
+# À niveau — Fiat Ducato
+
+PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
+
+## Utiliser / construire
+
+Node.js 22.12+ (version 22.23.4 utilisée pour la validation).
+
+```sh
+npm ci
+npm test
+npm run build
+npm run preview
+```
+
+Le dossier `dist/` est la livraison statique complète. Ne pas ouvrir `index.html` par `file://`. Le service worker est généré après chaque build, avec une version calculée sur le contenu de tous les fichiers. Le serveur de développement n’active pas le cache PWA.
+
+## Déploiement HTTPS
+
+Publier **le contenu de `dist/`** sur votre hébergement statique HTTPS. Le ZIP `ducato-level-dist.zip` contient exactement ce contenu. Le chemin de base est relatif : la PWA peut être publiée à la racine ou dans un sous-dossier, avec une URL terminée par `/`.
+
+Exemple de configuration Netlify fourni dans `netlify.toml` (commande `npm run build`, dossier `dist`). Il n’est pas nécessaire d’utiliser Netlify : tout serveur statique HTTPS convient. Aucune publication externe n’a été réalisée.
+
+Pour un serveur Caddy existant : adapter le domaine et le chemin du `Caddyfile.example`, faire pointer le DNS vers ce serveur et ouvrir les ports 80/443. Caddy peut obtenir le certificat automatiquement. Ne pas servir `sw.js` avec un cache HTTP de longue durée ; conserver le type JavaScript. Servir le manifest en `application/manifest+json` ou `application/json`.
+
+HTTPS est nécessaire sur téléphone pour les capteurs et le service worker ; `localhost` bénéficie d’une exception de développement. Un téléphone accédant à l’adresse IP HTTP du PC ne bénéficie pas de cette exception.
+
+## Installation et hors connexion
+
+1. Ouvrir l’URL HTTPS en ligne et attendre « Prêt hors ligne ».
+2. Android/Chrome : utiliser « Installer l’application » ou le menu du navigateur.
+3. iPhone/Safari : Partager → Sur l’écran d’accueil.
+4. Ouvrir l’application installée, activer le mode avion et recharger pour vérifier le cache sur l’appareil cible.
+
+Une mise à jour se prépare en arrière-plan et s’active après fermeture des anciens onglets de l’application. Rouvrir ensuite l’application. Le navigateur peut supprimer son stockage en cas de manque d’espace ; ouvrir alors une fois en ligne. Le badge de connexion dépend du signal fourni par le navigateur et ne teste pas l’accès Internet.
+
+## Mesure et calibration
+
+- Renseigner l’empattement (distance entre essieux) et la voie (distance entre centres des roues). Les valeurs initiales 403,5 / 181 cm sont des exemples, pas une certification des dimensions de votre Ducato. Le modèle suppose une voie identique à l’avant et à l’arrière.
+- Renseigner le nombre de paliers réellement disponibles (1 à 5), tous de 7 cm.
+- Calibrer sur une référence **connue horizontale**, téléphone immobile, écran vers le haut, portrait naturel, haut du téléphone vers l’avant du véhicule. Ne pas calibrer sur le plancher incliné du fourgon.
+- Replacer ensuite le téléphone dans la même orientation. Le zéro corrige l’orientation par rotation du vecteur vertical (et non simple soustraction d’angles couplés).
+- L’accès capteur est demandé uniquement au clic. Les mesures sont lissées et deviennent inutilisables après 3 secondes sans événement. Les appareils retournés ou trop inclinés sont rejetés.
+- Prendre la mesure véhicule arrêté **sans cales**. Après pose, lire l’inclinaison pour vérifier, sans appliquer une nouvelle recommandation à des cales déjà présentes.
+
+## Calcul et limites
+
+Les hauteurs initiales sont calculées par `z = x tan(roulis) + y tan(tangage)`, avec coordonnées des centres des roues en cm. Les corrections théoriques continues sont `max(z) - z` ; elles sont distinctes des hauteurs réalisables avec deux cales.
+
+Toutes les combinaisons de zéro, une ou deux roues relevées de 7 × palier cm sont examinées. Une caisse rigide avec quatre supports non coplanaires ne possède pas de plan unique : chaque triangle de support dont le plan est au-dessus du quatrième appui est évalué. Le score est la plus grande inclinaison de ces plans, `atan(hypot(pente_x, pente_y))`. Le minimum global est retenu ; égalités départagées par nombre de cales, puis somme des hauteurs, puis ordre d’énumération fixe.
+
+C’est une optimisation prudente **dans ce modèle**, pas une garantie de niveau réel. Elle suppose un terrain localement plan, une géométrie rectangulaire et un centre de masse suffisamment central ; elle ne modélise pas suspension, pression des pneus, enfoncement du sol ni déplacement du véhicule en montant sur la cale. Une seule recommandation est affichée, avec l’inclinaison résiduelle estimée. Une inclinaison résiduelle supérieure à 0,5° déclenche une indication de résultat imparfait (seuil d’interface, pas une tolérance constructeur).
+
+## Vérifications réalisées
+
+- 13 tests : plat, tangage dans les deux sens, roulis dans les deux sens, petites pentes, appuis non coplanaires, unités, signes des capteurs, entrées invalides, calibration et comparaison exhaustive avec une implémentation géométrique indépendante ; test de régression du service worker sans réseau (navigation et fichiers avec variation Origin).
+- Build de production React/Vite réussi.
+- Vérification visuelle Chrome bureau et largeur mobile 390 px ; simulation et proposition d’installation visibles.
+- Cache hors ligne contrôlé avec arrêt du serveur de preview puis rechargement navigateur.
+
+À valider sur les appareils réels : autorisations et précision des capteurs iOS/Android, installation depuis le domaine HTTPS final, répétabilité du zéro et mesures physiques du véhicule. Aucun téléphone ni fourgon réel n’a été utilisé pour cette validation.
+
+Références : [convention W3C des angles](https://www.w3.org/TR/orientation-event/), [permission des capteurs](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent/requestPermission_static), [déploiement Vite](https://vite.dev/guide/static-deploy.html).
