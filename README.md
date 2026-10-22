@@ -17,11 +17,9 @@ Le dossier `dist/` est la livraison statique complète. Ne pas ouvrir `index.htm
 
 ## GitHub Pages
 
-Adresse prévue après activation : https://cdesaintleger.github.io/calons/
+Adresse : https://cdesaintleger.github.io/calons/
 
-Prérequis : GitHub Pages doit être disponible pour la visibilité du dépôt et
-l'offre GitHub du propriétaire. Au 22 octobre 2026, l'activation est bloquée
-pour ce dépôt privé par l'offre actuelle ; aucune version Pages n'est encore publiée.
+Le dépôt est public et GitHub Pages est activé avec HTTPS obligatoire.
 
 Le workflow `.github/workflows/pages.yml` installe les dépendances avec `npm ci`,
 construit la PWA et exécute les tests avant de publier `dist/`.
