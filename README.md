@@ -113,3 +113,12 @@ La stabilité demande au moins 10 mesures sur 1,5 seconde, récentes de moins d'
 avec une amplitude de 0,2° maximum sur chaque axe dans une fenêtre de deux secondes.
 Ce critère mesure l'immobilité, pas la précision absolue. La calibration est désactivée
 pendant les mouvements ; le placement reste affiché comme provisoire.
+
+## Version 1.1.1
+
+Le numéro affiché dans l’en-tête provient de package.json. Chaque événement capteur
+est affiché directement : le filtre récursif qui conservait une ancienne inclinaison
+quand les événements s’arrêtaient a été supprimé. Sans nouvel événement, la dernière
+mesure reste visible et est signalée comme ancienne après trois secondes. Cela
+ne permet pas de distinguer un téléphone immobile d’un capteur interrompu.
+Les critères de stabilité et la fraîcheur requise pour calibrer restent appliqués.
