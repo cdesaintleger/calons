@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {solve,evaluate,groundHeights,sensorSlopes,calibratedAngles,validate} from '../src/level.js';
+import {isStable,solve,evaluate,groundHeights,sensorSlopes,calibratedAngles,validate} from '../src/level.js';
 const config={wheelbase:400,track:180,maxLevel:3};
 const angle=(height,distance)=>Math.atan(height/distance)*180/Math.PI;
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
@@ -19,3 +19,16 @@ function reference(h,L,T){const points=[[-T/2,L/2],[T/2,L/2],[-T/2,-L/2],[T/2,-L
 test('global optimum compared with independent exhaustive support geometry',()=>{for(const pitch of [-3,-.8,0,1.2,4])for(const roll of [-3,0,2]){const r=solve(pitch,roll,config),h=groundHeights(pitch,roll,400,180);assert.ok(r.count<=2);assert.ok(r.residual<=r.initial+1e-8);near(r.residual,reference(h.map((v,i)=>v+7*r.levels[i]),400,180));for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)for(let a=0;a<=3;a++)for(let b=0;b<=3;b++){const raised=[...h];raised[i]+=7*a;raised[j]+=7*b;assert.ok(r.residual<=reference(raised,400,180)+1e-8)}}});
 
 test("calibration removes reference tilt including coupled axes",()=>{const zero={pitch:4,roll:-3};const r=calibratedAngles(zero,zero);near(r.pitch,0);near(r.roll,0);const untouched=calibratedAngles(zero,{pitch:0,roll:0});near(untouched.pitch,4);near(untouched.roll,-3)});
+
+test('custom unequal ramp steps are used as total heights',()=>{
+ const r=solve(angle(11,400),0,{...config,heights:[4,11,17]});
+ assert.deepEqual(r.heights,[0,0,11,11]);near(r.residual,0);
+ for(const heights of [[7,7,14],[7,4,14],[7,NaN,14],[7,14],[-1,7,14]]) assert.throws(()=>validate({...config,heights}));
+});
+test('stability requires duration, sufficient samples, freshness and low variation',()=>{
+ const samples=Array.from({length:21},(_,i)=>({time:i*100,pitch:1,roll:2}));
+ assert.equal(isStable(samples,2000),true);
+ assert.equal(isStable(samples.slice(-5),2000),false);
+ assert.equal(isStable(samples,4000),false);
+ assert.equal(isStable(samples.map((s,i)=>({...s,pitch:i===10?1.5:1})),2000),false);
+});

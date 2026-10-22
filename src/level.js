@@ -1,6 +1,7 @@
 export const WHEELS = ['Avant gauche', 'Avant droite', 'Arrière gauche', 'Arrière droite'];
 const rad = Math.PI / 180;
-export function validate({ wheelbase, track, maxLevel }) {
+export function validate({ wheelbase, track, maxLevel, heights }) {
+  if (heights && (!Array.isArray(heights) || heights.length !== maxLevel || heights.some((v,i)=>!Number.isFinite(v)||v<=0||v>50||(i>0&&v<=heights[i-1])))) throw new Error("Les hauteurs doivent être croissantes, entre 0 et 50 cm.");
   if (!Number.isFinite(wheelbase) || wheelbase < 200 || wheelbase > 500 || !Number.isFinite(track) || track < 120 || track > 240 || !Number.isInteger(maxLevel) || maxLevel < 1 || maxLevel > 5) throw new Error('Empattement : 200–500 cm ; voie : 120–240 cm ; paliers : 1–5.');
 }
 // Screen-up portrait, top of phone pointing to vehicle front. W3C Z-X-Y rotation.
@@ -28,14 +29,15 @@ export function evaluate(h, wheelbase, track) {
 export function solve(pitch, roll, config) {
   validate(config);
   const { wheelbase, track, maxLevel } = config;
+  const steps=[0,...(config.heights || Array.from({length:maxLevel},(_,i)=>(i+1)*7))];
   const h = groundHeights(pitch, roll, wheelbase, track);
   const ideal = h.map(v => Math.max(...h)-v);
   let best;
   for (let a=0;a<=maxLevel;a++) for(let b=0;b<=maxLevel;b++) for(let c=0;c<=maxLevel;c++) for(let d=0;d<=maxLevel;d++) {
     const levels=[a,b,c,d], count=levels.filter(Boolean).length;
     if(count>2) continue;
-    const result=evaluate(h.map((v,i)=>v+7*levels[i]),wheelbase,track);
-    const candidate={...result,levels,count,total:levels.reduce((s,v)=>s+v,0)};
+    const result=evaluate(h.map((v,i)=>v+steps[levels[i]]),wheelbase,track);
+    const candidate={...result,levels,heights:levels.map(v=>steps[v]),count,total:levels.reduce((s,v)=>s+steps[v],0)};
     if(!best || candidate.residual < best.residual-1e-9 || (Math.abs(candidate.residual-best.residual)<1e-9 && (candidate.count<best.count || (candidate.count===best.count && candidate.total<best.total)))) best=candidate;
   }
   return {...best,ideal,initial:evaluate(h,wheelbase,track).residual};
@@ -54,4 +56,9 @@ export function calibratedAngles(raw, zero) {
 export function correctionColor(cm, capacity) {
   const ratio = Math.max(0, Math.min(1, cm / capacity));
   return `hsl(${120 * (1 - ratio)} 65% 42%)`;
+}
+
+export function isStable(samples, now) {
+ if(samples.length<10 || now-samples.at(-1).time>1000 || samples.at(-1).time-samples[0].time<1500) return false;
+ return ['pitch','roll'].every(key=>Math.max(...samples.map(s=>s[key]))-Math.min(...samples.map(s=>s[key]))<=0.2);
 }

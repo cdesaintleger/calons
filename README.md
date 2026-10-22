@@ -97,3 +97,19 @@ C’est une optimisation prudente **dans ce modèle**, pas une garantie de nivea
 À valider sur les appareils réels : autorisations et précision des capteurs iOS/Android, installation depuis le domaine HTTPS final, répétabilité du zéro et mesures physiques du véhicule. Aucun téléphone ni fourgon réel n’a été utilisé pour cette validation.
 
 Références : [convention W3C des angles](https://www.w3.org/TR/orientation-event/), [permission des capteurs](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent/requestPermission_static), [déploiement Vite](https://vite.dev/guide/static-deploy.html).
+
+## Version 1.1.0 et retour arrière
+
+Les releases GitHub sont identifiées par un tag `vMAJEUR.MINEUR.CORRECTIF`.
+Pour revenir à une version publiée : Actions → Deploy to GitHub Pages → Run workflow,
+laisser la branche `main` et renseigner le tag (par exemple `v1.0.0`) dans `version`.
+Le workflow reconstruit et vérifie cette version avant de la publier. Un push ultérieur
+sur main publiera à nouveau main. Les installations hors ligne restent sur leur version
+jusqu'à reconnexion et fermeture des anciens onglets.
+
+Les cales peuvent avoir 1 à 5 paliers de hauteurs totales personnalisées, strictement
+croissantes, jusqu'à 50 cm. Les anciens réglages sont conservés avec leurs paliers de 7 cm.
+La stabilité demande au moins 10 mesures sur 1,5 seconde, récentes de moins d'une seconde,
+avec une amplitude de 0,2° maximum sur chaque axe dans une fenêtre de deux secondes.
+Ce critère mesure l'immobilité, pas la précision absolue. La calibration est désactivée
+pendant les mouvements ; le placement reste affiché comme provisoire.

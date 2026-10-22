@@ -6,12 +6,17 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag ou commit à déployer (vide = main)"
+        required: false
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
   cancel-in-progress: true
 
 jobs:
@@ -21,6 +26,8 @@ jobs:
       VITE_BASE_PATH: /calons/
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
