@@ -5,7 +5,7 @@ const files=(await walk('dist')).filter(f=>!f.endsWith('/sw.js')).sort();
 const hash=createHash('sha256');for(const f of files)hash.update(await readFile(f));
 hash.update(await readFile('scripts/service-worker.mjs'));
 const version=hash.digest('hex').slice(0,16);
-await writeFile('dist/sw.js', `const PREFIX='ducato-level-';
+await writeFile('dist/sw.js', `const PREFIX='calons-'+encodeURIComponent(self.registration.scope)+'-';
 const CACHE=PREFIX+${JSON.stringify(version)};
 const ASSETS=${JSON.stringify(files.map(f=>'./'+f.slice(5)))};
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));

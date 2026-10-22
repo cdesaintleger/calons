@@ -15,11 +15,45 @@ npm run preview
 
 Le dossier `dist/` est la livraison statique complète. Ne pas ouvrir `index.html` par `file://`. Le service worker est généré après chaque build, avec une version calculée sur le contenu de tous les fichiers. Le serveur de développement n’active pas le cache PWA.
 
+## GitHub Pages
+
+Adresse prévue après activation : https://cdesaintleger.github.io/calons/
+
+Prérequis : GitHub Pages doit être disponible pour la visibilité du dépôt et
+l'offre GitHub du propriétaire. Au 22 octobre 2026, l'activation est bloquée
+pour ce dépôt privé par l'offre actuelle ; aucune version Pages n'est encore publiée.
+
+Le workflow `.github/workflows/pages.yml` installe les dépendances avec `npm ci`,
+construit la PWA et exécute les tests avant de publier `dist/`.
+Chaque push sur `main` déploie automatiquement ; les pull requests lancent uniquement
+les vérifications. Un lancement manuel est possible depuis Actions → Deploy to GitHub Pages.
+
+Dans Settings → Pages, la source doit être **GitHub Actions**.
+Le job de déploiement dispose uniquement des permissions Pages et OpenID Connect
+nécessaires ; aucun secret personnel n'est requis.
+
+Le workflow définit `VITE_BASE_PATH=/calons/`. Pour reproduire ce build localement :
+
+```sh
+VITE_BASE_PATH=/calons/ npm test
+npm run preview
+# Ouvrir http://localhost:4173/calons/
+```
+
+Le manifest conserve des URLs relatives et le service worker est enregistré sous
+`/calons/sw.js`. Ses caches sont isolés par URL de portée pour ne pas supprimer
+ceux d'une autre installation sur le même domaine GitHub Pages.
+Pour un futur domaine personnalisé à la racine, remplacer `VITE_BASE_PATH` par `/`.
+
+Pour revenir à une version précédente, rétablir son code dans un nouveau commit
+sur `main` : le même workflow republiera cette version. Les installations PWA
+adopteront la mise à jour après fermeture des anciens onglets puis réouverture en ligne.
+
 ## Déploiement HTTPS
 
 Publier **le contenu de `dist/`** sur votre hébergement statique HTTPS. Le ZIP `ducato-level-dist.zip` contient exactement ce contenu. Le chemin de base est relatif : la PWA peut être publiée à la racine ou dans un sous-dossier, avec une URL terminée par `/`.
 
-Exemple de configuration Netlify fourni dans `netlify.toml` (commande `npm run build`, dossier `dist`). Il n’est pas nécessaire d’utiliser Netlify : tout serveur statique HTTPS convient. Aucune publication externe n’a été réalisée.
+Exemple de configuration Netlify fourni dans `netlify.toml` (commande `npm run build`, dossier `dist`). Il n’est pas nécessaire d’utiliser Netlify : tout serveur statique HTTPS convient. Le déploiement GitHub Pages est géré par le workflow décrit ci-dessus.
 
 Pour un serveur Caddy existant : adapter le domaine et le chemin du `Caddyfile.example`, faire pointer le DNS vers ce serveur et ouvrir les ports 80/443. Caddy peut obtenir le certificat automatiquement. Ne pas servir `sw.js` avec un cache HTTP de longue durée ; conserver le type JavaScript. Servir le manifest en `application/manifest+json` ou `application/json`.
 
@@ -53,7 +87,7 @@ C’est une optimisation prudente **dans ce modèle**, pas une garantie de nivea
 
 ## Vérifications réalisées
 
-- 13 tests : plat, tangage dans les deux sens, roulis dans les deux sens, petites pentes, appuis non coplanaires, unités, signes des capteurs, entrées invalides, calibration et comparaison exhaustive avec une implémentation géométrique indépendante ; test de régression du service worker sans réseau (navigation et fichiers avec variation Origin).
+- 14 tests : plat, tangage dans les deux sens, roulis dans les deux sens, petites pentes, appuis non coplanaires, unités, signes des capteurs, entrées invalides, calibration et comparaison exhaustive avec une implémentation géométrique indépendante ; tests du service worker sans réseau (navigation et fichiers avec variation Origin) et des chemins de déploiement GitHub Pages.
 - Build de production React/Vite réussi.
 - Vérification visuelle Chrome bureau et largeur mobile 390 px ; simulation et proposition d’installation visibles.
 - Cache hors ligne contrôlé avec arrêt du serveur de preview puis rechargement navigateur.
