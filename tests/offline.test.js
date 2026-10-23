@@ -25,3 +25,15 @@ test('production entry uses the configured deployment base', async () => {
  assert.equal(manifest.start_url, './');
  assert.equal(manifest.scope, './');
 });
+
+test('cache activation removes only old versions of this application scope', async () => {
+ const source=await readFile('dist/sw.js','utf8'),handlers={},deleted=[];
+ const scope='https://cdesaintleger.github.io/calons/';
+ const prefix='calons-'+encodeURIComponent(scope)+'-';
+ const hash=source.match(/const CACHE=PREFIX+\+"([a-f0-9]+)"/)[1];
+ const current=prefix+hash, old=prefix+'old', other='calons-other-scope-old';
+ let claimed=false;
+ vm.runInNewContext(source,{URL,self:{registration:{scope},clients:{claim:async()=>{claimed=true}},addEventListener:(name,fn)=>handlers[name]=fn},caches:{keys:async()=>[old,current,other],delete:async key=>deleted.push(key)}});
+ let activation;handlers.activate({waitUntil:p=>activation=p});await activation;
+ assert.deepEqual(deleted,[old]);assert.equal(claimed,true);
+});

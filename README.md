@@ -4,7 +4,7 @@ PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ress
 
 ## Utiliser / construire
 
-Node.js 22.12+ (version 22.23.4 utilisée pour la validation).
+Node.js 22.12+ (v1.1.5 validée localement avec Node 24.19.0 ; workflow sous Node 22).
 
 ```sh
 npm ci
@@ -76,7 +76,7 @@ Les commandes de mesure sont accessibles dès le premier écran. Les onglets « 
 - Renseigner le nombre de paliers réellement disponibles (1 à 5), tous de 7 cm.
 - Calibrer sur une référence **connue horizontale**, téléphone immobile, écran vers le haut, portrait naturel, haut du téléphone vers l’avant du véhicule. Ne pas calibrer sur le plancher incliné du fourgon.
 - Replacer ensuite le téléphone dans la même orientation. Le zéro corrige l’orientation par rotation du vecteur vertical (et non simple soustraction d’angles couplés).
-- L’accès capteur est demandé uniquement au clic. Les mesures sont lissées et deviennent inutilisables après 3 secondes sans événement. Les appareils retournés ou trop inclinés sont rejetés.
+- L’accès aux capteurs est demandé uniquement au clic. Les mesures sont filtrées ; après 3 secondes sans événement valide, la valeur reste visible avec le statut « Dernière mesure conservée · non actualisée ». Les appareils retournés ou trop inclinés sont rejetés.
 - Prendre la mesure véhicule arrêté **sans cales**. Après pose, lire l’inclinaison pour vérifier, sans appliquer une nouvelle recommandation à des cales déjà présentes.
 
 ## Calcul et limites
@@ -89,7 +89,7 @@ C’est une optimisation prudente **dans ce modèle**, pas une garantie de nivea
 
 ## Vérifications réalisées
 
-- 14 tests : plat, tangage dans les deux sens, roulis dans les deux sens, petites pentes, appuis non coplanaires, unités, signes des capteurs, entrées invalides, calibration et comparaison exhaustive avec une implémentation géométrique indépendante ; tests du service worker sans réseau (navigation et fichiers avec variation Origin) et des chemins de déploiement GitHub Pages.
+- Tests automatisés : géométrie et optimisation des cales, calibration, capteurs simulés, permissions, interruptions, stabilité, cache hors réseau, renouvellement des caches et chemins GitHub Pages. Voir les notes de release pour la validation de chaque version.
 - Build de production React/Vite réussi.
 - Vérification visuelle Chrome bureau et largeur mobile 390 px ; simulation et proposition d’installation visibles.
 - Cache hors ligne contrôlé avec arrêt du serveur de preview puis rechargement navigateur.
@@ -130,3 +130,67 @@ de visibilité invalide aussi les mesures en mémoire. Une mesure conservée san
 événement est signalée comme telle. La calibration reste possible après confirmation
 explicite de l’horizontalité et de l’immobilité si la stabilité n’est pas confirmée.
 Aucune calibration n’est possible avant le premier événement valide de la session.
+
+## Version 1.1.5 — capteurs et fraîcheur
+
+Le diagnostic du code 1.1.4 montre que le délai de trois secondes ne désactive pas
+le capteur : il dégrade son statut. Le critère de stabilité expirait dès une seconde
+de silence, tandis qu'une valeur invalide ou un changement de visibilité effaçait
+la mesure. Les événements étaient affichés directement, sans filtre. Le code seul
+ne permet pas d'établir pourquoi un téléphone particulier cesse d'émettre.
+
+Le module `src/sensors.js` sélectionne une seule source : `devicemotion` est préféré
+après au moins cinq événements valides répartis sur 500 ms, sans intervalle de plus
+de 250 ms. `deviceorientation` prend le relais sur son prochain événement valide
+si motion est silencieux/inexploitable depuis une seconde. Revenir à motion exige
+à nouveau sa qualification. Aucune API ne garantit un flux permanent.
+
+Le vecteur `accelerationIncludingGravity` doit avoir des composantes finies, une
+norme entre 8,5 et 11 m/s² et un axe z positif. Une accélération linéaire disponible
+supérieure à 0,5 m/s² est rejetée. Les angles respectent exactement la convention
+existante ; un écart supérieur à 0,3° avec une orientation récente rejette motion.
+Les implémentations aux conventions incompatibles gardent donc le repli orientation.
+Un mouvement à norme proche de g reste difficile à distinguer de la gravité seule :
+la mesure s'utilise exclusivement véhicule arrêté.
+
+Un filtre exponentiel de constante 150 ms et une bande morte de 0,03° limitent le
+bruit. La pose stabilisée est conservée jusqu'à un écart réel supérieur à 0,08°.
+La confirmation initiale utilise toujours au moins dix événements sur 1,5 seconde
+dans une fenêtre de deux secondes, amplitude maximale de 0,2° par axe. Une interruption
+ou un changement de source impose une nouvelle confirmation. « Active », « stable »
+et « dernière mesure non actualisée » sont des états distincts ; le timer ne fait
+que mettre à jour le statut, jamais les mesures. La dernière pose stabilisée est
+aussi conservée séparément dans le contrôleur.
+
+En arrière-plan, les valeurs restent visibles mais sont invalidées comme données
+actuelles. Le retour au premier plan exige un nouvel événement. Les permissions
+motion/orientation sont demandées lors du même clic, avant toute attente asynchrone ;
+le refus d'une source n'empêche pas l'autre de fonctionner. Sans événements, la
+simulation reste disponible. Le zéro `ducato-cal` conserve sa clé, son format et sa
+rotation mathématique, sans migration ni recalibration silencieuse.
+
+Le cache PWA reste fondé sur le contenu du build : le nouveau JavaScript, incluant
+la version 1.1.5, produit une nouvelle clé. Fermer tous les onglets/PWA de Calons
+puis rouvrir en ligne permet l'activation de la mise à jour ; les autres caches
+du domaine ne sont pas supprimés.
+
+### Recette restant à faire sur Android/Chrome et iPhone/Safari
+
+1. Ouvrir l'URL HTTPS puis la PWA installée ; vérifier v1.1.5 et les réglages/zéro
+   déjà mémorisés. Activer les capteurs, tester acceptation et refus des permissions.
+2. Sur une référence horizontale connue, écran vers le haut, haut vers l'avant,
+   calibrer si nécessaire ; rester immobile 30 secondes et observer le statut.
+3. Incliner légèrement vers chacun des quatre côtés : vérifier avant/arrière et
+   droite/gauche, réaction rapide puis stabilisation, sans oscillations permanentes.
+4. Mettre en arrière-plan ou verrouiller le téléphone plus de trois secondes :
+   vérifier la conservation de la valeur et l'état non actualisé au retour, puis
+   la reprise et une nouvelle confirmation de stabilité après un petit mouvement.
+5. Si motion n'est pas disponible, vérifier le repli orientation. Si les deux flux
+   s'arrêtent, la valeur doit rester affichée sans prétendre être actualisée.
+6. Fermer les anciennes fenêtres, rouvrir en ligne puis tester le mode avion :
+   affichage, réglages, simulation et calcul des cales doivent rester disponibles.
+
+Validation automatisée uniquement pour les capteurs de cette release : aucun test
+physique Android/iPhone ni contrôle de précision sur véhicule n'est revendiqué.
+Références : [axes et événements W3C](https://www.w3.org/TR/orientation-event/),
+[gravité et limites de l'accéléromètre](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/accelerationIncludingGravity).
