@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { MeasurementNotice } from './MeasurementNotice.jsx';
 import { WHEELS } from './level.js';
 
 export const THEMES = [
@@ -18,13 +19,14 @@ const number=value=>value.toLocaleString('fr-FR',{maximumFractionDigits:1});
 function Van() {
  return <svg className="modern-van" viewBox="0 0 140 300" aria-hidden="true"><defs><linearGradient id="van-body"><stop stopColor="#b9c6cb"/><stop offset=".25" stopColor="#f5f4ef"/><stop offset=".75" stopColor="#e0e6e5"/><stop offset="1" stopColor="#a3b4bc"/></linearGradient></defs><rect x="9" y="47" width="15" height="46" rx="6" fill="#263440"/><rect x="116" y="47" width="15" height="46" rx="6" fill="#263440"/><rect x="9" y="231" width="15" height="45" rx="6" fill="#263440"/><rect x="116" y="231" width="15" height="45" rx="6" fill="#263440"/><path d="M23 44Q23 9 53 8H87Q117 9 117 44V280Q117 293 101 293H39Q23 293 23 280Z" fill="url(#van-body)" stroke="#8f9fa7" strokeWidth="2"/><path d="M32 48Q70 34 108 48L102 78Q70 69 38 78Z" fill="#304d61" stroke="#748c96" strokeWidth="2"/><rect x="36" y="91" width="68" height="163" rx="15" fill="#e3e8e5" stroke="#afbdc0"/><rect x="54" y="111" width="32" height="32" rx="5" fill="#466274" stroke="#f8faf5" strokeWidth="3"/><rect x="54" y="199" width="32" height="26" rx="4" fill="#bccacf" stroke="#f8faf5" strokeWidth="2"/><path d="M39 265H101M70 266V286" stroke="#a9b7ba" fill="none"/><path d="M28 276h10m64 0h10" stroke="#cb5651" strokeWidth="4"/></svg>;
 }
-export function ModernMeasure({result,error,mode,fresh,stable,raw,enabled,sound,cal,config,onStart,onCalibrate,onHelp}) {
+export function ModernMeasure({notice,result,error,mode,fresh,stable,raw,enabled,sound,cal,config,onStart,onCalibrate,onHelp}) {
  const status=mode==='manual'?'◇ Simulation':fresh?(stable?'● Mesure stable':'◌ En mesure'):raw?'Ⅱ En pause':'○ En attente';
  const max=config.heights.at(-1);
  const title=error?'Mesure inexploitable':!result?(!enabled?'Prêt à vous poser ?':!raw?'En attente du capteur':!cal?'Calibrez le zéro':'En attente'):result.count?`${result.count} cale${result.count>1?'s':''} à placer`:'Aucune cale à placer';
  return <section className="modern-measure">
   <div className={"modern-status "+(!fresh||mode==='manual'?'muted':'')} role="status">{status}</div>
   <div className="modern-title"><h1>{title}</h1><p>{error||(!result?'Téléphone à plat, haut vers l’avant':mode==='sensor'&&!fresh?'Dernière mesure conservée · non actualisée':mode==='sensor'&&!stable?'Placement provisoire · stabilisation…':result.count?'Suivez les paliers indiqués':result.initial<=.2?'Le véhicule est à niveau':'Aucun placement ne réduit davantage la pente')}</p></div>
+  <MeasurementNotice notice={notice}/>
   <div className="modern-map"><span className="modern-front">AVANT ↑</span><Van/>{WHEELS.map((name,i)=>{
    const value=result?.ideal[i],ratio=value==null?0:Math.min(1,value/max);
    const intensity=value==null?'unknown':ratio<.15?'low':ratio<.5?'medium':'high';

@@ -24,6 +24,36 @@ mémorisée sur votre appareil.
 Chrome avec des mesures de capteur simulées. Les jauges représentent la correction
 théorique ; les hauteurs et paliers indiquent les cales recommandées.*
 
+## Version 1.3.1 — Aide à la mesure
+
+Dans les trois thèmes, un bandeau explique pourquoi une mesure n’est pas encore
+exploitable : téléphone trop incliné, données perturbées ou inutilisables,
+stabilisation en cours, absence de signal, pause ou problème d’accès au capteur.
+Posez le téléphone **écran vers le haut, son haut vers l’avant du véhicule**,
+puis gardez-le immobile. Le bandeau disparaît lorsque la mesure est stable.
+
+Tenir le téléphone en main ne prouve pas un problème d’autorisation. Le diagnostic
+utilise les événements effectivement reçus. Sans événement après trois secondes,
+l’application suggère de vérifier l’accès aux mouvements du navigateur (Safari
+sur iPhone). Une dernière mesure peut rester affichée, explicitement en pause.
+Les données rejetées du capteur utilisé ne permettent plus un statut stable ni
+un guidage sonore continu ; la réception de données valides reprend la mesure.
+
+Recette sur téléphone : autoriser les capteurs, tenir l’appareil verticalement,
+vérifier la consigne, le poser à plat et attendre sa disparition ; vérifier aussi
+le refus d’autorisation, une interruption et le retour. Le test automatisé
+`scripts/check-guidance.mjs` couvre les trois thèmes sous Chrome et WebKit avec
+capteurs simulés (mêmes variables de lancement que `scripts/check-themes.mjs`).
+
+<details>
+<summary>Aperçu de la consigne lorsque le téléphone est trop incliné</summary>
+
+<img src="docs/screenshots/aide-mesure.png" alt="Calons indique de poser le téléphone à plat, écran vers le haut" width="300">
+
+*Interface v1.3.1, événement de capteur simulé dans Chrome.*
+
+</details>
+
 ## Version 1.3.0 — Thèmes
 
 Ouvrez **⚙ Paramètres → Apparence** pour choisir **Classique**, **Clair** ou

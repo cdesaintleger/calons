@@ -1,3 +1,32 @@
+# v1.3.1 — Des consignes claires pour la mesure
+
+- Notification intégrée dans les trois thèmes, visible près du véhicule :
+  téléphone trop incliné, mesure perturbée, stabilisation, données inutilisables,
+  absence de signal, interruption et accès au capteur non accordé.
+- Consigne de placement : écran vers le haut, haut du téléphone vers l’avant du
+  véhicule. Le message disparaît après réception de mesures exploitables et stables.
+- L’absence de signal ne signifie pas automatiquement un refus de permission :
+  une aide invite à vérifier l’accès aux mouvements dans le navigateur.
+- Les événements rejetés du capteur sélectionné interrompent immédiatement la
+  fraîcheur et le guidage sonore ; la dernière valeur est conservée. Les défauts
+  d’un capteur secondaire ne masquent pas un repli valide.
+- Aucune nouvelle mesure inventée, aucun changement des axes, de la calibration
+  persistée ni du calcul des cales. Reprise avec de nouveaux échantillons.
+
+## Validation
+
+- `npm ci`, `npm test` : 48 tests réussis ; build de production Pages réussi.
+- Chrome et WebKit, chacun dans Classique, Clair et Bleu nuit : absence de signal,
+  posture verticale, retour à plat, disparition du message, pause, refus d’accès
+  simulé et lisibilité du bandeau.
+- Tests de non-régression : fraîcheur, son, repli orientation/motion, stabilité,
+  calibration, géométrie, cales et cache PWA.
+- Capteurs et permissions simulés ; aucun test physique sur iPhone ou Android.
+  À vérifier sur téléphone : accès aux mouvements, posture verticale puis à plat,
+  immobilisation, verrouillage/retour et son.
+
+---
+
 # v1.3.0 — Trois thèmes au choix
 
 - Paramètres accessibles depuis la roue dentée de l’en-tête.

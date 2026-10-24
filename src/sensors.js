@@ -19,6 +19,21 @@ export function motionSlopes(event) {
   try { return sensorSlopes(beta, gamma); } catch { return null; }
 }
 
+// Diagnostic only: rejected events never become measurements.
+export function sensorIssue(source, event) {
+  if (source === 'orientation') {
+    if (![event.beta, event.gamma].every(Number.isFinite)) return 'invalid';
+    return Math.abs(event.beta) > 20 || Math.abs(event.gamma) > 20 ? 'tilted' : null;
+  }
+  const g = event.accelerationIncludingGravity;
+  if (!g || ![g.x, g.y, g.z].every(Number.isFinite)) return 'invalid';
+  const magnitude = Math.hypot(g.x, g.y, g.z);
+  if (magnitude < 8.5 || magnitude > 11) return 'moving';
+  const a = event.acceleration;
+  if (a && [a.x, a.y, a.z].every(Number.isFinite) && Math.hypot(a.x, a.y, a.z) > 0.5) return 'moving';
+  return motionSlopes(event) ? null : 'tilted';
+}
+
 const distance = (a, b) => Math.max(Math.abs(a.pitch - b.pitch), Math.abs(a.roll - b.roll));
 
 // Only receive() accepts a new reading. snapshot() never advances sample time.
@@ -26,6 +41,7 @@ export class SensorTracker {
   constructor() { this.value = null; this.lastStable = null; this.suspend(false); }
   suspend(hidden) {
     this.hidden = hidden;
+    this.observations = {};
     this.interrupted = true;
     this.source = null;
     this.samples = [];
@@ -36,6 +52,10 @@ export class SensorTracker {
   }
   receive(source, event, time) {
     if (this.hidden || !Number.isFinite(time)) return this.snapshot(time);
+    if (!['motion', 'orientation'].includes(source)) return this.snapshot(time);
+    const previous = this.observations[source];
+    if (previous && time <= previous.time) return this.snapshot(time);
+    this.observations[source] = { time, issue: sensorIssue(source, event) };
     let v;
     if (source === 'motion') v = motionSlopes(event);
     else if (source === 'orientation') {
@@ -43,6 +63,7 @@ export class SensorTracker {
     } else return this.snapshot(time);
     if (!v) {
       if (source === 'motion') this.motionRun = [];
+      if (source === this.source) this.interrupted = true;
       return this.snapshot(time);
     }
     if (source === 'orientation') this.orientation = { ...v, time };
@@ -89,7 +110,14 @@ export class SensorTracker {
     // Stability describes a confirmed pose, freshness describes live reception.
     // A timer may downgrade status, but cannot confirm stability or add samples.
     const stable = fresh && Boolean(this.lock);
-    return { raw: this.value, lastStable: this.lastStable, source: this.source,
+    const recent = Object.values(this.observations).filter(o => time >= o.time && time - o.time < FRESH_MS);
+    const selected = this.observations[this.source];
+    const fault = selected && recent.includes(selected) && selected.issue ? selected.issue :
+      recent.some(o => o.issue === 'tilted') ? 'tilted' : recent.some(o => o.issue === 'moving') ? 'moving' :
+      recent.length && recent.every(o => o.issue) ? 'invalid' : null;
+    const diagnostic = this.hidden ? 'paused' : fresh ? (stable ? null : 'stabilizing') :
+      fault || (this.value ? 'paused' : recent.length ? 'waiting' : 'no-signal');
+    return { diagnostic, raw: this.value, lastStable: this.lastStable, source: this.source,
       fresh, stable, status: !this.value ? 'waiting' : !fresh ? 'retained' : stable ? 'stable' : 'active' };
   }
 }
