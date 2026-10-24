@@ -11,3 +11,11 @@ main{max-width:760px;padding:16px 20px}header{padding-bottom:14px}.brand{font-si
 .height-controls{display:flex;gap:10px;align-items:center}.height-controls button{width:44px;min-height:44px;margin:0;flex-shrink:0;font-size:20px;padding:6px}.height-controls input{margin:0;text-align:center;min-width:0}.ramp-height label{margin-bottom:8px}
 
 footer{flex-direction:column;align-items:stretch;gap:12px}footer .install-button{width:100%;min-height:48px;font-size:14px}footer>span{text-align:center}
+
+/* Sound remains reachable in both views and while scrolling. */
+.app-header{position:sticky;top:0;z-index:10;background:#f5f4ef;padding:10px 0 12px;padding-top:max(10px,env(safe-area-inset-top));gap:10px;box-shadow:0 5px 8px #f5f4ef}
+.brand-status{min-width:0}.brand-status .badge{display:block;background:none;padding:2px 0 0;font-weight:500}
+.sound-toggle{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;min-width:145px;font-size:12px;padding:10px 12px;flex-shrink:0}
+.sound-toggle svg{width:20px;height:20px;flex-shrink:0}.sound-toggle[aria-pressed=true]{background:#d1e99e;border-color:#b8d67e;color:#203a30}.sound-toggle[aria-pressed=true]:hover{background:#c6df91}
+.sound-status{font-size:11px;color:#5c6d5d;margin:10px 0;min-height:16px}
+@media(max-width:420px){.app-header .brand-icon{display:none}.app-header .brand{font-size:23px}.app-header .app-version{margin-left:5px}.sound-toggle{min-width:140px;padding:10px}}

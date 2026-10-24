@@ -1,3 +1,33 @@
+# v1.2.0 — Guidage sonore accessible en un geste
+
+- Bouton Son activé/désactivé dans un en-tête qui reste visible au défilement,
+  disponible depuis les deux vues, avec icône, libellé et état accessible.
+- Bips de plus en plus rapides en approchant du niveau ; son continu doux à
+  0,2° ou moins après confirmation de stabilité, sortie à 0,3° (hystérésis).
+- Guidage fondé sur l'inclinaison réelle calibrée des deux axes, jamais sur le
+  résultat prédit par les cales. Son désactivé au chargement et coupure immédiate.
+- Silence en simulation, sans zéro/mesure exploitable, lors d'un silence capteur
+  de trois secondes ou en arrière-plan. Échéance audio même si JavaScript ralentit.
+- Web Audio local, initialisé par clic, compatible avec le fonctionnement hors ligne.
+  Aucun changement du calcul des cales, des capteurs ou de la calibration persistée.
+
+## Validation de v1.2.0
+
+- `npm ci` réussi (aucune vulnérabilité signalée), `npm test` : **38 tests réussis**,
+  `npm run build` réussi avec `VITE_BASE_PATH=/calons/` ; régressions capteurs,
+  calibration, cales et PWA incluses.
+- Chrome bureau automatisé, Web Audio réel et capteurs simulés : activation,
+  continu/bips, fraîcheur, simulation et coupure ; bouton visible après défilement
+  à 320/390/760 px, aucune erreur JavaScript ni débordement horizontal.
+- Tests audio : progression du rythme, deux axes, hystérésis, stabilité requise,
+  silence/perte de fraîcheur, arrière-plan, désactivation immédiate, activation
+  asynchrone annulée, API absente et interruptions du navigateur.
+- Aucun test acoustique physique sur Android/iPhone. Vérifier permissions audio,
+  volume/sortie Bluetooth, passage en arrière-plan, retour et mode avion sur les
+  appareils réels. Procédure dans README.md.
+
+---
+
 # v1.1.5 — Mesure plus stable et fraîcheur explicite
 
 - Sélection contrôlée de `devicemotion` (gravité exploitable) avec repli sur

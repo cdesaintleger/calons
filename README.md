@@ -2,6 +2,43 @@
 
 PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
 
+## Version 1.2.0 — guidage sonore
+
+Le bouton **Son activé / Son désactivé** reste accessible dans l'en-tête pendant
+le défilement et dans les deux vues. Le son est désactivé au chargement ; un clic
+le démarre, un autre le coupe immédiatement. Aucun réglage ni onglet à ouvrir.
+
+Le guidage utilise l'inclinaison combinée des deux axes **réellement mesurés après
+calibration**, jamais l'inclinaison résiduelle prédite par le calcul des cales.
+À partir de 2°, un bip est émis toutes les deux secondes. Le rythme accélère
+progressivement jusqu'à cinq bips par seconde à proximité du niveau. Une mesure
+stable à 0,2° ou moins déclenche un son continu doux ; la sortie de cet état se
+fait au-delà de 0,3° ou dès que la stabilité est perdue. Cette hystérésis évite les
+bascules dues au bruit. Ces seuils sont une tolérance pratique, pas une garantie
+de précision physique.
+
+Le son est suspendu en mode simulation, sans calibration/mesure exploitable,
+après trois secondes sans mesure valide ou en arrière-plan. Le son continu possède
+aussi une échéance programmée sur l'horloge audio : il ne peut pas rester actif
+indéfiniment si les timers JavaScript sont retardés. Le retour au premier plan
+demande une mesure fraîche ; si le navigateur interrompt le contexte audio, le
+bouton repasse à désactivé et permet de le réactiver d'un geste.
+
+L'audio est créé/repris uniquement lors du clic, conformément aux restrictions
+des navigateurs mobiles. Le volume réel dépend du volume multimédia, du mode
+silencieux et de la sortie audio du téléphone (Bluetooth compris). Le son est
+synthétisé localement par Web Audio, sans téléchargement, et fonctionne hors ligne.
+Les capteurs, le zéro mémorisé et l'optimisation des cales restent inchangés.
+
+Recette Android/Chrome et iPhone/Safari : vérifier le bouton à 320 px et après
+défilement, activer puis couper le son, approcher progressivement du niveau et
+confirmer le son continu après stabilisation, interrompre les capteurs/verrouiller
+l'écran, revenir à l'application puis tester en mode avion. Vérifier le volume
+multimédia et le comportement d'une éventuelle sortie Bluetooth. Les tests
+automatisés ne remplacent pas cette validation acoustique sur téléphones réels.
+
+Référence : [bonnes pratiques Web Audio et activation utilisateur](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices).
+
 ## Utiliser / construire
 
 Node.js 22.12+ (v1.1.5 validée localement avec Node 24.19.0 ; workflow sous Node 22).
