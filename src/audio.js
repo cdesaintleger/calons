@@ -13,7 +13,7 @@ export function soundPlan(input, wasLevel = false) {
   // Hysteresis avoids repeated beeps/continuous transitions near the threshold.
   const level = stable && tilt <= (wasLevel ? 0.3 : 0.2);
   if (level) return { kind: 'continuous', label: 'Niveau atteint · son continu', tilt };
-  const interval = 200 + 1800 * Math.max(0, Math.min(1, (tilt - 0.2) / 1.8));
+  const interval = 200 + 1800 * Math.max(0, Math.min(1, Math.log1p(Math.max(0, tilt - 0.2)) / Math.log1p(15)));
   return { kind: 'beep', interval, tilt, label: tilt < 0.5 ? 'Approche du niveau · bips rapides' : 'Guidage sonore · bips espacés' };
 }
 
@@ -27,7 +27,7 @@ export class SoundGuide {
     this.label = '';
   }
   report(label) { if (label !== this.label) { this.label = label; this.notify({ enabled: this.enabled, label }); } }
-  async enable() {
+  async enable(test = false) {
     this.disable();
     const generation = ++this.generation;
     this.enabled = true;
@@ -40,8 +40,8 @@ export class SoundGuide {
       this.gain.gain.value = 0;
       this.gain.connect(context.destination);
       this.oscillator = context.createOscillator();
-      this.oscillator.type = 'sine';
-      this.oscillator.frequency.value = 660;
+      this.oscillator.type = 'triangle';
+      this.oscillator.frequency.value = 880;
       this.oscillator.connect(this.gain);
       this.oscillator.start();
       await context.resume();
@@ -53,6 +53,7 @@ export class SoundGuide {
           this.report('Son interrompu · touchez « Son désactivé » pour réactiver');
         }
       };
+      this.testUntil = test ? this.clock() + 700 : null;
       this.lastBeep = -Infinity;
       this.kind = 'silent';
       this.timer = this.schedule(() => this.tick());
@@ -71,20 +72,22 @@ export class SoundGuide {
   tick() {
     if (!this.enabled || !this.context || this.context.state !== 'running') return;
     const now = this.clock(), input = this.read(now);
-    const plan = soundPlan({ ...input, now }, this.kind === 'continuous');
+    if (this.testUntil && (now >= this.testUntil || input.hidden)) { this.disable(); return; }
+    // Explicit short audition, independent of sensor data; never feeds measurements.
+    const plan = this.testUntil ? { kind: 'continuous', label: 'Test du son · 0,7 seconde' } : soundPlan({ ...input, now }, this.kind === 'continuous');
     const previous = this.kind;
     this.kind = plan.kind;
     this.report(plan.label);
     if (plan.kind === 'silent') { this.mute(); this.lastBeep = -Infinity; return; }
     const time = this.context.currentTime, gain = this.gain.gain;
     // Every audible envelope expires no later than the real reading's deadline.
-    const remaining = Math.max(0, (FRESH_MS - (now - input.sampleTime)) / 1000);
+    const remaining = Math.max(0, (this.testUntil ? this.testUntil - now : FRESH_MS - (now - input.sampleTime)) / 1000);
     if (remaining <= 0.02) { this.mute(); return; }
     if (plan.kind === 'continuous') {
       gain.cancelScheduledValues(time);
-      gain.setValueAtTime(previous === 'continuous' ? 0.045 : 0, time);
-      gain.linearRampToValueAtTime(0.045, time + 0.01);
-      gain.setValueAtTime(0.045, time + remaining - 0.01);
+      gain.setValueAtTime(previous === 'continuous' ? 0.22 : 0, time);
+      gain.linearRampToValueAtTime(0.22, time + 0.01);
+      gain.setValueAtTime(0.22, time + remaining - 0.01);
       gain.linearRampToValueAtTime(0, time + remaining);
     } else {
       if (previous !== 'beep') { this.mute(); this.lastBeep = -Infinity; }
@@ -92,8 +95,8 @@ export class SoundGuide {
         const duration = Math.min(0.08, remaining);
         gain.cancelScheduledValues(time);
         gain.setValueAtTime(0, time);
-        gain.linearRampToValueAtTime(0.06, time + 0.008);
-        gain.setValueAtTime(0.06, time + duration - 0.01);
+        gain.linearRampToValueAtTime(0.3, time + 0.008);
+        gain.setValueAtTime(0.3, time + duration - 0.01);
         gain.linearRampToValueAtTime(0, time + duration);
         this.lastBeep = now;
       }
@@ -111,6 +114,7 @@ export class SoundGuide {
     if (this.context && this.context.state !== 'closed') this.context.close().catch(() => {});
     this.context = this.gain = this.oscillator = null;
     this.kind = 'silent';
+    this.testUntil = null;
     this.report('Guidage sonore désactivé');
   }
 }

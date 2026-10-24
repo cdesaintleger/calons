@@ -1,3 +1,26 @@
+# v1.2.1 — Son renforcé et interface épurée
+
+- Signal triangulaire à 880 Hz, gain augmenté pour les bips et le continu.
+- Cadence progressive sur toute la plage exploitable, sans plateau dès 2°.
+- Bouton Son toujours accessible ; statut compact avec symbole et libellé.
+- Calibrer compact, confirmation du zéro, aide repliable ; angles, simulation,
+  source et relance manuelle regroupés dans Options avancées.
+- Test sonore de 0,7 seconde indépendant des capteurs, avec arrêt automatique.
+- Réception des mesures toujours active après activation ; reprise à l'arrivée
+  d'événements frais, aucune mesure simulée. Permissions mobiles inchangées.
+- Calcul des cales, calibration persistée et cache hors ligne préservés.
+
+## Validation
+
+- `npm ci`, `npm test` : 40 tests réussis ; build Pages `/calons/` réussi.
+- Chrome bureau automatisé : Web Audio, capteurs simulés, test sonore,
+  reprise après silence, options avancées, largeurs 320/390/760 px.
+- Pas de validation acoustique sur téléphone réel. À vérifier sur Android/Chrome
+  et iPhone/Safari : volume, progression des bips, niveau stable, arrière-plan,
+  retour, calibration, mode avion et sortie Bluetooth. Procédure dans README.md.
+
+---
+
 # v1.2.0 — Guidage sonore accessible en un geste
 
 - Bouton Son activé/désactivé dans un en-tête qui reste visible au défilement,

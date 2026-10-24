@@ -19,3 +19,6 @@ footer{flex-direction:column;align-items:stretch;gap:12px}footer .install-button
 .sound-toggle svg{width:20px;height:20px;flex-shrink:0}.sound-toggle[aria-pressed=true]{background:#d1e99e;border-color:#b8d67e;color:#203a30}.sound-toggle[aria-pressed=true]:hover{background:#c6df91}
 .sound-status{font-size:11px;color:#5c6d5d;margin:10px 0;min-height:16px}
 @media(max-width:420px){.app-header .brand-icon{display:none}.app-header .brand{font-size:23px}.app-header .app-version{margin-left:5px}.sound-toggle{min-width:140px;padding:10px}}
+
+/* Keep measurement controls secondary to the vehicle and ramp placement. */
+.measure-tools{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin:4px 0 10px}.measure-tools>button{min-height:44px;padding:8px 12px;font-size:12px}.placement-help{flex:1;min-width:62px;font-size:12px}.placement-help summary{padding:13px 8px}.placement-help[open]{flex-basis:100%}.placement-help p,.advanced p{font-size:12px;line-height:1.5;color:#6a756d}.advanced{border-top:1px solid #edf0e9;margin-top:16px;font-size:12px}.advanced>summary{padding:14px 0}.advanced .readings{margin-top:8px}.advanced .readings strong{font-size:22px}.advanced .actions{flex-wrap:wrap}.live{max-width:125px;white-space:normal;text-align:center}

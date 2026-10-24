@@ -2,7 +2,7 @@
 
 PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
 
-## Version 1.2.0 — guidage sonore
+## Version 1.2.1 — guidage audible et écran simplifié
 
 Le bouton **Son activé / Son désactivé** reste accessible dans l'en-tête pendant
 le défilement et dans les deux vues. Le son est désactivé au chargement ; un clic
@@ -10,9 +10,11 @@ le démarre, un autre le coupe immédiatement. Aucun réglage ni onglet à ouvri
 
 Le guidage utilise l'inclinaison combinée des deux axes **réellement mesurés après
 calibration**, jamais l'inclinaison résiduelle prédite par le calcul des cales.
-À partir de 2°, un bip est émis toutes les deux secondes. Le rythme accélère
-progressivement jusqu'à cinq bips par seconde à proximité du niveau. Une mesure
-stable à 0,2° ou moins déclenche un son continu doux ; la sortie de cet état se
+Le rythme varie sur toute la plage exploitable : environ un bip toutes les deux
+secondes à 15°, puis accélération progressive jusqu'à cinq bips par seconde près
+du niveau. Le timbre triangulaire à 880 Hz et le gain renforcé améliorent la présence
+du signal (gain 0,30 pour les bips, 0,22 pour le continu). Une mesure
+stable à 0,2° ou moins déclenche un son continu ; la sortie de cet état se
 fait au-delà de 0,3° ou dès que la stabilité est perdue. Cette hystérésis évite les
 bascules dues au bruit. Ces seuils sont une tolérance pratique, pas une garantie
 de précision physique.
@@ -38,6 +40,19 @@ multimédia et le comportement d'une éventuelle sortie Bluetooth. Les tests
 automatisés ne remplacent pas cette validation acoustique sur téléphones réels.
 
 Référence : [bonnes pratiques Web Audio et activation utilisateur](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices).
+
+L'écran principal affiche le véhicule, les corrections, un statut avec symbole
+et libellé (Stable, En mesure, En pause), ainsi qu'un bouton Calibrer compact.
+L'aide de placement est dépliée tant qu'aucun zéro n'est mémorisé. Les angles,
+Téléphone/Simulation, la source et Relancer le capteur sont dans **Options avancées**.
+La réception reste active et reprend dès l'arrivée de nouveaux événements ; aucune
+mesure n'est inventée et les permissions initiales exigent toujours un clic.
+Calibrer demande confirmation d'une surface horizontale avant de remplacer le zéro.
+
+**Tester le son**, dans Options avancées, joue 0,7 seconde indépendamment des
+capteurs puis désactive le son. Il remplace le guidage s'il était actif ; réactivez
+ensuite Son pour guider le nivellement. Pour la recette physique, comparez aussi
+les cadences à 8°, 3°, 1° puis à plat, et contrôlez la coupure du test et du guidage.
 
 ## Utiliser / construire
 

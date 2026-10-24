@@ -5,9 +5,9 @@ import { soundPlan, SoundGuide } from '../src/audio.js';
 const input = overrides => ({ angles: { pitch: 1, roll: 0 }, mode: 'sensor', fresh: true, stable: true, sampleTime: 0, now: 0, hidden: false, ...overrides });
 
 test('beeps accelerate monotonically toward level, with bounded cadence', () => {
-  const intervals = [8, 2, 1, 0.5, 0.21].map(pitch => soundPlan(input({ angles: { pitch, roll: 0 } })).interval);
-  assert.deepEqual(intervals.slice(0, 2), [2000, 2000]);
-  for (let i = 2; i < intervals.length; i++) assert.ok(intervals[i] < intervals[i-1]);
+  const intervals = [15, 8, 3, 2, 1, 0.5, 0.21].map(pitch => soundPlan(input({ angles: { pitch, roll: 0 } })).interval);
+  assert.ok(intervals[0] <= 2000);
+  for (let i = 1; i < intervals.length; i++) assert.ok(intervals[i] < intervals[i-1]);
   assert.equal(soundPlan(input({ stable: false, angles: { pitch: 0, roll: 0 } })).interval, 200);
 });
 test('continuous requires confirmed stability and combined axes, with hysteresis', () => {
@@ -47,12 +47,12 @@ function fixture({ resume, createError, nativeCancel = false } = {}) {
 test('audio is opt-in, single oscillator, rate unaffected by rapid sensor updates; off stops immediately', async () => {
   const f = fixture(); assert.equal(f.counts().starts, 0);
   await f.guide.enable(); assert.equal(f.counts().starts, 1);
-  for (let t = 1; t < 1000; t++) f.advance(t);
+  for (let t = 1; t < 500; t++) f.advance(t);
   assert.equal(f.events.filter(e => e[0] === 'ramp' && e[1] > 0).length, 1);
   f.guide.disable();
   assert.deepEqual(f.counts(), { starts: 1, stops: 1, closes: 1, cancelled: 1 });
   assert.equal(f.guide.enabled, false);
-  assert.deepEqual(f.events.at(-1), ['set', 0, 0.999]);
+  assert.deepEqual(f.events.at(-1), ['set', 0, 0.499]);
   f.advance(2000); assert.equal(f.counts().starts, 1);
 });
 test('continuous tone expires on the audio clock even without another JS callback', async () => {
@@ -95,4 +95,20 @@ test('missing API, rejected resume and browser interruption fail silently with a
   const f = fixture(); await f.guide.enable(); f.context.state = 'interrupted'; f.context.onstatechange();
   assert.equal(f.guide.enabled, false); assert.equal(f.counts().stops, 1);
   assert.match(f.notifications.at(-1).label, /interrompu/);
+});
+
+test('audition works without a sensor and expires on audio clock, then disables', async () => {
+  const f = fixture(); f.set({ angles: null, fresh: false });
+  await f.guide.enable(true);
+  assert.match(f.notifications.at(-1).label, /Test du son/);
+  assert.deepEqual(f.events.at(-1), ['ramp', 0, 0.7]);
+  assert.ok(f.events.some(e => e[0] === 'ramp' && e[1] === 0.22));
+  f.advance(700); assert.equal(f.guide.enabled, false);
+  assert.equal(f.counts().closes, 1);
+});
+test('audition stops immediately when hidden or manually switched off', async () => {
+  const f = fixture(); await f.guide.enable(true);
+  f.set({ hidden: true }); f.guide.tick();
+  assert.equal(f.guide.enabled, false);
+  assert.equal(f.counts().stops, 1);
 });
