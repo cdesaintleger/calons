@@ -2,6 +2,28 @@
 
 PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
 
+[Ouvrir Calons](https://cdesaintleger.github.io/calons/) · [Dernière release officielle](https://github.com/cdesaintleger/calons/releases/latest)
+
+## Aperçu de l’application
+
+Trois thèmes au choix dans **⚙ Paramètres → Apparence**, avec une préférence
+mémorisée sur votre appareil.
+
+| Classique | Clair | Bleu nuit |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/classique.png" alt="Thème Classique : vue du véhicule et corrections par roue" width="240"> | <img src="docs/screenshots/clair.png" alt="Thème Clair : placement des cales et jauges de correction" width="240"> | <img src="docs/screenshots/bleu-nuit.png" alt="Thème Bleu nuit : placement des cales sur fond marine" width="240"> |
+
+<details>
+<summary>Voir le choix du thème dans les paramètres</summary>
+
+<img src="docs/screenshots/parametres.png" alt="Paramètres : sélection Classique, Clair ou Bleu nuit" width="300">
+
+</details>
+
+*Captures de l’interface v1.3.0 au format mobile (390 × 844), réalisées dans
+Chrome avec des mesures de capteur simulées. Les jauges représentent la correction
+théorique ; les hauteurs et paliers indiquent les cales recommandées.*
+
 ## Version 1.3.0 — Thèmes
 
 Ouvrez **⚙ Paramètres → Apparence** pour choisir **Classique**, **Clair** ou
