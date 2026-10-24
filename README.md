@@ -2,6 +2,29 @@
 
 PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
 
+## Version 1.3.0 — Thèmes
+
+Ouvrez **⚙ Paramètres → Apparence** pour choisir **Classique**, **Clair** ou
+**Bleu nuit**. Le changement est immédiat et le choix reste mémorisé sur cet
+appareil, y compris hors ligne. Classique reste le thème par défaut.
+
+Les deux nouvelles vues regroupent le véhicule, les hauteurs des cales, les
+paliers et l’inclinaison résiduelle estimée. Les jauges mesurent la **correction
+théorique**, sur une même échelle correspondant à la hauteur maximale des cales,
+avec saturation au-delà ; elles ne représentent pas les hauteurs discrètes
+recommandées. Une roue laissée au sol peut donc avoir une jauge non nulle.
+Les valeurs exactes de correction sont disponibles aux technologies d’assistance.
+Le choix du thème ne modifie aucun calcul ni calibration. Les outils avancés et
+les dimensions se trouvent aussi dans Paramètres. Les écrans principaux compacts
+ont été vérifiés sans défilement à 320×740, 390×844 et 430×932 ; paramètres et aide
+peuvent défiler, et le contenu reste accessible sur des écrans plus petits ou zoomés.
+
+La suite de régression visuelle `scripts/check-themes.mjs` utilise Playwright
+(disponible séparément, avec Chromium et WebKit). Lancer le serveur Vite sur le
+port 4174 puis `node scripts/check-themes.mjs`. Variables facultatives :
+`PLAYWRIGHT_MODULE` (module Playwright), `CHROME_EXECUTABLE`, `TEST_URL`,
+`TEST_OUTPUT` (captures, `/tmp/calons-theme-check` par défaut).
+
 ## Version 1.2.1 — guidage audible et écran simplifié
 
 Le bouton **Son activé / Son désactivé** reste accessible dans l'en-tête pendant

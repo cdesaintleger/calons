@@ -1,3 +1,29 @@
+# v1.3.0 — Trois thèmes au choix
+
+- Paramètres accessibles depuis la roue dentée de l’en-tête.
+- Thème Classique conservé par défaut ; nouveaux thèmes Clair et Bleu nuit,
+  avec vue compacte du véhicule, des cales et du résultat estimé.
+- Préférence mémorisée localement, disponible hors ligne ; un choix invalide
+  revient au thème Classique sans toucher au zéro ni aux dimensions du véhicule.
+- Intensité de correction théorique par roue : couleur et jauge proportionnelle.
+  Les hauteurs/paliers restent ceux du placement optimisé. Signalement des
+  résultats imparfaits et des mesures conservées ou provisoires.
+- Configuration, simulation, diagnostic et installation regroupés dans les paramètres.
+- Illustration vectorielle locale, aucun téléchargement d’image ou de police.
+- Aucun changement du calcul des cales, des capteurs ni du guidage sonore.
+
+## Validation
+
+- `npm ci`, `npm test` : 40 tests réussis ; build de production Pages réussi.
+- Chrome et WebKit : sélection/persistance des thèmes, valeur de repli, continuité
+  audio, valeurs comparées au solveur, simulation, modales au clavier et onglets
+  classiques. Vues compactes sans défilement à 320×740, 390×844 et 430×932.
+- Rechargement WebKit avec serveur arrêté : cache, calibration, thème et test audio.
+- WebKit sur Mac avec profil iPhone et capteurs simulés ; pas de validation
+  physique sur iPhone/Android. Le volume réel reste à vérifier sur téléphone.
+
+---
+
 # v1.2.1 — Son renforcé et interface épurée
 
 - Signal triangulaire à 880 Hz, gain augmenté pour les bips et le continu.
