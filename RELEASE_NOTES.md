@@ -1,3 +1,24 @@
+# v1.3.2 — Nouvelle identité « C comme cale »
+
+- Nouvelle icône : C ivoire et cale turquoise sur fond bleu pétrole, d’après le
+  concept retenu. Source vectorielle locale et rendus nets à toutes les tailles.
+- Logo dans l’en-tête des trois thèmes ; favicon et icône d’écran d’accueil iPhone.
+- Icônes PWA 192/512 px et variante Android maskable avec marge de sécurité.
+- Nouvelles URLs d’icônes et cache PWA régénéré pour la mise à jour.
+- Aucun changement des mesures, de la calibration ou du calcul des cales.
+
+## Validation
+
+- `npm ci` réussi ; `npm test` : 50 tests réussis ; build Pages réussi.
+- Vérification des dimensions PNG, des références HTML/manifest et du cache.
+- Chrome et WebKit : thèmes, mise en page mobile et chargement du logo.
+- Le remplacement d’une icône déjà installée dépend du système. Ouvrir puis
+  fermer et rouvrir Calons en ligne ; si l’ancienne icône reste présente, il peut
+  être nécessaire de recréer le raccourci. Sur iPhone, vérifier l’ajout à l’écran
+  d’accueil dans Safari. Aucune validation physique iPhone/Android effectuée.
+
+---
+
 # v1.3.1 — Des consignes claires pour la mesure
 
 - Notification intégrée dans les trois thèmes, visible près du véhicule :

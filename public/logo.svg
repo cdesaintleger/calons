@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Calons — C comme cale</title>
+  <rect width="512" height="512" fill="#062941"/>
+  <g id="mark">
+    <path d="M351 143 A149 149 0 1 0 247 398" fill="none" stroke="#fff9ec" stroke-width="67" stroke-linecap="butt"/>
+    <path d="M243 430 L296 396 L296 369 Q296 362 303 362 H335 V339 Q335 332 342 332 H374 V306 Q374 299 381 299 H419 Q426 299 426 306 V423 Q426 430 419 430 Z" fill="#00c9c5"/>
+  </g>
+</svg>

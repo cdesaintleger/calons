@@ -1,5 +1,7 @@
 # Calons
 
+<img src="public/icon-192-v1.3.2.png" alt="Logo Calons : C ivoire et cale turquoise" width="96">
+
 PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ressources et icônes sont locales : aucun CDN, aucune police distante. Calibration et configuration sont conservées dans le stockage du navigateur.
 
 [Ouvrir Calons](https://cdesaintleger.github.io/calons/) · [Dernière release officielle](https://github.com/cdesaintleger/calons/releases/latest)
@@ -23,6 +25,19 @@ mémorisée sur votre appareil.
 *Captures de l’interface v1.3.0 au format mobile (390 × 844), réalisées dans
 Chrome avec des mesures de capteur simulées. Les jauges représentent la correction
 théorique ; les hauteurs et paliers indiquent les cales recommandées.*
+
+## Version 1.3.2 — C comme cale
+
+Nouvelle icône bleu pétrole, C ivoire et cale turquoise : icônes Android/PWA,
+écran d’accueil iPhone, onglet du navigateur et en-tête dans les trois thèmes.
+La source éditable est `public/logo.svg`. Les PNG sont produits par
+`scripts/render-icons.mjs` avec Playwright/Chromium (variables `PLAYWRIGHT_MODULE`
+et `CHROME_EXECUTABLE` comme pour les tests visuels).
+
+Le cache inclut tous les formats. Le système peut conserver l’ancienne icône
+sur un raccourci déjà installé ; si elle persiste après réouverture en ligne,
+recréez le raccourci. Les captures ci-dessus présentent l’interface v1.3.0,
+avant ce changement de logo.
 
 ## Version 1.3.1 — Aide à la mesure
 
