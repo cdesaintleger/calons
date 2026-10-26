@@ -1,6 +1,13 @@
 {
-  "appId": "fr.calons.androidtest",
-  "appName": "Calons Test",
+  "appId": "fr.calons.app",
+  "appName": "Calons",
   "webDir": "dist",
-  "android": { "backgroundColor": "#f5f4ef" }
+  "android": {
+    "backgroundColor": "#f5f4ef"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css"
+    }
+  }
 }

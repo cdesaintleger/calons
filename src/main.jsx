@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { correctionColor, solve, calibratedAngles, validate, WHEELS } from './level';
 import './style.css';
 import { SensorTracker, requestSensorAccess, listenSensors } from './sensors.js';
-import { isNativeAndroid, AndroidSensors } from './platform.js';
+import { isNativeAndroid, AndroidSensors, setSystemBarTheme } from './platform.js';
 import { listenNativeSensors } from './native-sensors.js';
 import { SoundGuide } from './audio.js';
 import { ModernMeasure, SettingsDialog, ThemePicker, THEMES } from './themes.jsx';
@@ -18,7 +18,7 @@ function initialConfig(){try{const c=read('ducato-config',defaults);validate(c);
 function App(){
  const [theme,setTheme]=useState(()=>{const saved=read('calons-theme','classic');return THEMES.some(t=>t.id===saved)?saved:'classic'});
  const [preferences,setPreferences]=useState(false),[help,setHelp]=useState(false);
- useEffect(()=>{document.documentElement.dataset.theme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='night'?'#101b2b':'#f5f4ef')},[theme]);
+ useEffect(()=>{document.documentElement.dataset.theme=theme;setSystemBarTheme(theme);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='night'?'#101b2b':'#f5f4ef')},[theme]);
  const [config,setConfig]=useState(initialConfig),[draft,setDraft]=useState(config),[settings,setSettings]=useState(false);
  const [view,setView]=useState('vehicle'),[access,setAccess]=useState(null);
  const [mode,setMode]=useState('sensor'),[manual,setManual]=useState({pitch:1.4,roll:-1.8}),[enabled,setEnabled]=useState(false);
@@ -84,7 +84,7 @@ function App(){
  {message&&<div className="message" role="status"><span>{message}</span><button aria-label="Fermer le message" onClick={()=>setMessage('')}>×</button></div>}
  <SettingsDialog open={preferences} title="Paramètres" onClose={()=>setPreferences(false)}>{message&&<p role="status">{message}</p>}<ThemePicker value={theme} onChange={value=>{setTheme(value);save('calons-theme',value)}}/>{vehicleSettings}{advancedControls}<button className="install-button" disabled={installed} onClick={installApp}>{installed?'✓ Application installée':'Installer l’application'}</button></SettingsDialog>
  <SettingsDialog open={help} title="Placement et calibration" onClose={()=>setHelp(false)}><p>Posez le téléphone écran vers le haut, en portrait, son haut vers l’avant du véhicule. Mesurez à l’arrêt, sans cales.</p><p>Calibrez uniquement sur une surface connue horizontale. Conservez ensuite la même orientation.</p><p>Les jauges indiquent la correction théorique, les hauteurs et paliers indiquent les cales à placer. Un placement peut rester imparfait.</p><p>Utilisez des cales homologuées sur un sol stable, immobilisez le véhicule et vérifiez le niveau après placement. Recalculez après retrait des cales.</p></SettingsDialog>
- <footer className={theme==='classic'?'':'modern-footer'}><button className="primary install-button" disabled={installed} onClick={installApp}>{installed?'✓ Application installée':'↓ Installer l’application'}</button><span>CALONS v{version} · L’essentiel, même loin du réseau.</span></footer>
+ <footer className={theme==='classic'?'':'modern-footer'}><button className="primary install-button" disabled={installed} onClick={installApp}>{installed?'✓ Application installée':'↓ Installer l’application'}</button><span className="footer-credit">CALONS v{version} · L’essentiel, même loin du réseau.<small className="author-credit">Par Christophe de saint leger</small></span></footer>
  </main>
 }
 createRoot(document.getElementById('root')).render(<App/>);

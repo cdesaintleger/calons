@@ -1,3 +1,31 @@
+# Android 1.4.0 — Première version finale
+
+- APK de publication signé, non débogable, nommé **Calons**.
+- Lecture native des capteurs Android identique à la version de test.
+- En-tête placé sous la barre d’état et les encoches, dans les trois thèmes.
+- Contraste des icônes système adapté au thème.
+- Signature discrète **Christophe de saint leger** en bas de l’application.
+
+## Installation
+
+Télécharger **Calons-1.4.0.apk**, puis ouvrir le fichier sur le téléphone.
+Android 7 minimum, WebView à jour. Si Android le demande, autoriser l’installation
+depuis le navigateur. Les ressources sont embarquées pour un usage hors ligne.
+
+Cette application finale est distincte de **Calons Test** et de la PWA.
+**Refaire la calibration et la configuration du véhicule** après installation.
+Les futures mises à jour de Calons conserveront la même signature.
+
+## Validation
+
+53 tests JavaScript, tests Java des axes, build release et signature vérifiés.
+Zones sûres et auteur contrôlés dans les trois thèmes avec Chrome et WebKit,
+sur deux tailles d’écran et trois hauteurs de barre d’état simulées.
+La fluidité de la version native de test a été confirmée par l’utilisateur.
+La nouvelle marge système reste à confirmer sur son téléphone réel.
+
+---
+
 # v1.3.5 — Correction des sauts de mise en page
 
 - Les consignes remplacent le texte de contexte dans une zone de hauteur constante,

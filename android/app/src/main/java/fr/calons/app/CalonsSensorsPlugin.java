@@ -1,4 +1,4 @@
-package fr.calons.androidtest;
+package fr.calons.app;
 
 import android.content.Context;
 import android.hardware.Sensor;

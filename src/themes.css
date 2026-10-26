@@ -62,3 +62,15 @@ footer.modern-footer{border:0;margin-top:10px;padding:0 0 env(safe-area-inset-bo
 .modern-prediction{height:64px;border:1px solid transparent;font-variant-numeric:tabular-nums}
 .modern-title h1{min-height:1.12em}
 .modern-wheel strong,.wheel-label strong{font-variant-numeric:tabular-nums}
+
+/* Capacitor 8 supplies CSS insets; older WebViews already have native padding. */
+:root{--calons-top:var(--safe-area-inset-top,env(safe-area-inset-top,0px));--calons-bottom:var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px));--calons-left:var(--safe-area-inset-left,env(safe-area-inset-left,0px));--calons-right:var(--safe-area-inset-right,env(safe-area-inset-right,0px));--calons-safe-height:calc(var(--calons-top) + var(--calons-bottom))}
+#root{padding:var(--calons-top) var(--calons-right) var(--calons-bottom) var(--calons-left)}
+.app-header{top:var(--calons-top);padding-top:10px}
+[data-theme=light] main,[data-theme=night] main{min-height:calc(100svh - var(--calons-safe-height))}
+footer.modern-footer{padding-bottom:0}
+.author-credit{display:block;font-size:9px;font-weight:400;color:inherit;margin-top:3px}
+.message{bottom:calc(20px + var(--calons-bottom))}
+@media(max-height:760px){.modern-measure .modern-map{height:calc(280px - min(40px,var(--calons-safe-height)))}.modern-wheel.position-0,.modern-wheel.position-1{top:32px}.modern-wheel.position-2,.modern-wheel.position-3{bottom:33px}}
+
+@media(max-height:760px){.modern-title .measurement-context{height:52px}.modern-prediction{height:56px}}

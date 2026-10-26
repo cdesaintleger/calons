@@ -1,0 +1,61 @@
+name: Android release APK
+on:
+  push:
+    branches: [release/android-1.4.0]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
+      - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - run: npm ci
+      - run: npm test
+        env:
+          VITE_BASE_PATH: /
+      - run: npx cap sync android
+      - name: Restore private release signing key
+        env:
+          KEYSTORE: ${{ secrets.CALONS_ANDROID_KEYSTORE }}
+        run: |
+          test -n "$KEYSTORE"
+          umask 077
+          printf '%s' "$KEYSTORE" | base64 --decode > "$RUNNER_TEMP/calons-release.p12"
+      - name: Build signed release and test Android
+        working-directory: android
+        env:
+          CALONS_KEYSTORE_PATH: ${{ runner.temp }}/calons-release.p12
+          CALONS_KEY_PASSWORD: ${{ secrets.CALONS_ANDROID_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon testReleaseUnitTest assembleRelease
+      - name: Verify release APK
+        run: |
+          mkdir -p apk
+          cp android/app/build/outputs/apk/release/app-release.apk apk/Calons-1.4.0.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs apk/*.apk | tee apk/signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging apk/*.apk > apk/package-info.txt
+          if grep -q 'application-debuggable' apk/package-info.txt; then exit 1; fi
+          cd apk
+          sha256sum *.apk > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: calons-android-release
+          path: apk/
+          retention-days: 90
+      - name: Remove temporary signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/calons-release.p12"

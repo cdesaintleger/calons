@@ -1,4 +1,4 @@
-package fr.calons.androidtest;
+package fr.calons.app;
 import org.junit.Test;
 import static org.junit.Assert.*;
 public class SensorAxesTest {

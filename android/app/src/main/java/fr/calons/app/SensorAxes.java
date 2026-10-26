@@ -1,4 +1,4 @@
-package fr.calons.androidtest;
+package fr.calons.app;
 
 // Android Surface rotation constants are 0,1,2,3 (0,90,180,270 degrees).
 // Remap even in portrait: some Android devices have landscape natural orientation.

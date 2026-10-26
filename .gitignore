@@ -3,3 +3,4 @@ dist/
 *.zip
 
 outputs/android/
+outputs/android-signing/
