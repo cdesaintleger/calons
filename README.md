@@ -26,6 +26,17 @@ mémorisée sur votre appareil.
 Chrome avec des mesures de capteur simulées. Les jauges représentent la correction
 théorique ; les hauteurs et paliers indiquent les cales recommandées.*
 
+## Version 1.3.3 — Jauge de stabilisation
+
+La consigne de placement est remplacée par une jauge lorsque le téléphone est
+à plat. Son remplissage dépend des mesures reçues et devient « Stable » après
+une acquisition cohérente ; il ne progresse pas artificiellement avec le temps.
+Un mouvement relance la stabilisation. Une interruption remet la jauge à zéro,
+sans effacer la dernière mesure. « Stable » ne signifie pas « véhicule à niveau ».
+
+Le bandeau conserve sa hauteur dans les trois thèmes pour éviter les sauts de
+mise en page. Les problèmes d’accès au capteur restent explicitement indiqués.
+
 ## Version 1.3.2 — C comme cale
 
 Nouvelle icône bleu pétrole, C ivoire et cale turquoise : icônes Android/PWA,

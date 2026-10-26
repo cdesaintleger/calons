@@ -1,3 +1,35 @@
+# v1.3.3 — Une stabilisation sans mouvements de l’interface
+
+- Bandeau de hauteur fixe dans les trois thèmes : les changements d’état ne
+  font plus grandir ou rétrécir le bloc ni déplacer le véhicule.
+- Consigne « Posez le téléphone à plat » lorsque la position l’exige, puis
+  jauge de stabilisation jusqu’à « Stable ».
+- Progression fondée sur les échantillons reçus, leur durée et leur cohérence.
+  Aucun timer ne simule une progression ; le mouvement relance la stabilisation.
+- En cas d’interruption, la jauge revient à zéro et la dernière mesure reste
+  conservée. Les refus d’accès au capteur restent explicitement signalés.
+- Espacements adaptés aux petits écrans. Calibration, calcul des cales et
+  guidage sonore inchangés ; cache PWA régénéré.
+
+## Validation
+
+- `npm ci`, `npm test` : 51 tests réussis ; build GitHub Pages réussi.
+- Chrome et WebKit : trois thèmes, transitions posture inclinée / stabilisation /
+  stable / pause, hauteur et position du bandeau, refus d’accès simulé.
+- Mise en page mobile, choix du thème, son, simulation et résultats des cales.
+- Capteurs et permissions simulés : aucun test physique Android ou iPhone.
+
+## Recette sur téléphone
+
+Ouvrir Calons en ligne, fermer puis rouvrir l’application. Activer le capteur,
+prendre le téléphone en main puis le poser écran vers le haut, son haut vers
+l’avant du véhicule. Vérifier la consigne puis la jauge, sans déplacement du
+bloc. Bouger légèrement puis immobiliser le téléphone : la jauge doit repartir
+et atteindre « Stable ». Refaire dans les trois thèmes et après un retour
+d’arrière-plan. « Stable » décrit la mesure, pas l’horizontalité du véhicule.
+
+---
+
 # v1.3.2 — Nouvelle identité « C comme cale »
 
 - Nouvelle icône : C ivoire et cale turquoise sur fond bleu pétrole, d’après le

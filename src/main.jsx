@@ -50,7 +50,7 @@ function App(){
  useEffect(()=>{guide.current?.tick()},[mode,cal,measurement]);
  function toggleSound(){if(guide.current?.enabled)guide.current.disable();else guide.current?.enable()}
  const [accessError,setAccessError]=useState(''),[startedAt,setStartedAt]=useState(0);
- const notice=measurementGuidance({mode,enabled,accessError,diagnostic:measurement.diagnostic,startedAt,now:performance.now()});
+ const notice=measurementGuidance({mode,enabled,accessError,diagnostic:measurement.diagnostic,progress:measurement.progress,startedAt,now:performance.now()});
  const starting=useRef(false);
  useEffect(()=>{const id=setInterval(()=>setMeasurement(tracker.current.snapshot(performance.now())),1000);const net=()=>setOffline(!navigator.onLine);const prompt=e=>{e.preventDefault();setInstall(e)};window.addEventListener('online',net);window.addEventListener('offline',net);window.addEventListener('beforeinstallprompt',prompt);
  if('serviceWorker' in navigator && import.meta.env.PROD) navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).then(()=>navigator.serviceWorker.ready).then(()=>setCached(true)).catch(()=>setMessage('Le cache hors connexion n’a pas pu être préparé. Rechargez avec une connexion.'));

@@ -25,7 +25,7 @@ export function ModernMeasure({notice,result,error,mode,fresh,stable,raw,enabled
  const title=error?'Mesure inexploitable':!result?(!enabled?'Prêt à vous poser ?':!raw?'En attente du capteur':!cal?'Calibrez le zéro':'En attente'):result.count?`${result.count} cale${result.count>1?'s':''} à placer`:'Aucune cale à placer';
  return <section className="modern-measure">
   <div className={"modern-status "+(!fresh||mode==='manual'?'muted':'')} role="status">{status}</div>
-  <div className="modern-title"><h1>{title}</h1><p>{error||(!result?'Téléphone à plat, haut vers l’avant':mode==='sensor'&&!fresh?'Dernière mesure conservée · non actualisée':mode==='sensor'&&!stable?'Placement provisoire · stabilisation…':result.count?'Suivez les paliers indiqués':result.initial<=.2?'Le véhicule est à niveau':'Aucun placement ne réduit davantage la pente')}</p></div>
+  <div className="modern-title"><h1>{title}</h1><p>{error||(!result?'Téléphone à plat, haut vers l’avant':mode==='sensor'&&!fresh?'Dernière mesure conservée · non actualisée':mode==='sensor'&&!stable?'Placement provisoire':result.count?'Suivez les paliers indiqués':result.initial<=.2?'Le véhicule est à niveau':'Aucun placement ne réduit davantage la pente')}</p></div>
   <MeasurementNotice notice={notice}/>
   <div className="modern-map"><span className="modern-front">AVANT ↑</span><Van/>{WHEELS.map((name,i)=>{
    const value=result?.ideal[i],ratio=value==null?0:Math.min(1,value/max);
