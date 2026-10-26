@@ -1,3 +1,15 @@
+# v1.3.4 — Retrait de la jauge de stabilisation
+
+- Suppression de la jauge, du pourcentage et de son espace réservé dans les trois thèmes.
+- Conservation de la consigne de placement et des alertes d’accès ou de données indisponibles.
+- La stabilité continue d’être vérifiée en interne pour les mesures et le son.
+- Calcul des cales, calibration et fonctionnement hors ligne préservés.
+
+Validation : 50 tests automatisés et build Pages réussis. Contrôles Chrome et
+WebKit avec capteurs simulés ; aucun test physique Android ou iPhone.
+
+---
+
 # v1.3.3 — Une stabilisation sans mouvements de l’interface
 
 - Bandeau de hauteur fixe dans les trois thèmes : les changements d’état ne

@@ -36,19 +36,6 @@ export function sensorIssue(source, event) {
 
 const distance = (a, b) => Math.max(Math.abs(a.pitch - b.pitch), Math.abs(a.roll - b.roll));
 
-// Progress depends on received samples, never on elapsed wall time alone.
-export function stabilityProgress(samples, now) {
-  if (!samples.length || now - samples.at(-1).time > 1000) return 0;
-  const window = [];
-  for (let i = samples.length - 1; i >= 0; i--) {
-    const next = [samples[i], ...window];
-    if (!['pitch', 'roll'].every(k => Math.max(...next.map(s => s[k])) - Math.min(...next.map(s => s[k])) <= 0.2)) break;
-    window.unshift(samples[i]);
-  }
-  const span = window.length ? window.at(-1).time - window[0].time : 0;
-  return Math.floor(99 * Math.min(1, span / 1500, window.length / 10));
-}
-
 // Only receive() accepts a new reading. snapshot() never advances sample time.
 export class SensorTracker {
   constructor() { this.value = null; this.lastStable = null; this.suspend(false); }
@@ -130,7 +117,7 @@ export class SensorTracker {
       recent.length && recent.every(o => o.issue) ? 'invalid' : null;
     const diagnostic = this.hidden ? 'paused' : fresh ? (stable ? null : 'stabilizing') :
       fault || (this.value ? 'paused' : recent.length ? 'waiting' : 'no-signal');
-    return { progress: stable ? 100 : fresh ? stabilityProgress(this.samples, time) : 0, diagnostic, raw: this.value, lastStable: this.lastStable, source: this.source,
+    return { diagnostic, raw: this.value, lastStable: this.lastStable, source: this.source,
       fresh, stable, status: !this.value ? 'waiting' : !fresh ? 'retained' : stable ? 'stable' : 'active' };
   }
 }

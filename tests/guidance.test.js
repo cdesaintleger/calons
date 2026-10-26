@@ -6,13 +6,13 @@ import {soundPlan} from '../src/audio.js';
 const orient=(t,beta,time)=>t.receive('orientation',{beta,gamma:0},time);
 const settle=t=>{for(let time=0;time<=2200;time+=50)orient(t,0,time);return t.snapshot(2200);};
 const input={mode:'sensor',enabled:true,startedAt:0,now:4000};
-test('upright orientation is explained without creating a sample; laying flat completes the gauge after stability',()=>{
+test('upright orientation is explained without creating a sample; laying flat removes the placement notice',()=>{
  const t=new SensorTracker();const s=orient(t,75,0);assert.equal(s.diagnostic,'tilted');assert.equal(s.raw,null);
  assert.match(measurementGuidance({...input,...s}).title,/à plat/);
  assert.equal(orient(t,0,100).diagnostic,'stabilizing');
  for(let time=150;time<=2400;time+=50)orient(t,0,time);
  assert.equal(t.snapshot(2400).diagnostic,null);
- assert.equal(measurementGuidance({...input,...t.snapshot(2400)}).progress,100);
+ assert.equal(measurementGuidance({...input,...t.snapshot(2400)}),null);
 });
 test('invalid selected sensor immediately invalidates freshness and audio but preserves value and calibration input',()=>{
  const t=new SensorTracker();const before=settle(t);const bad=orient(t,90,2300);
@@ -34,10 +34,10 @@ test('motion diagnostics distinguish invalid values, perturbation and screen-dow
 });
 test('signal timeout and retained values have different instructions, without inferring permission denial',()=>{
  const t=new SensorTracker();assert.equal(t.snapshot(4000).diagnostic,'no-signal');
- assert.equal(measurementGuidance({...input,diagnostic:'no-signal',now:1000}).kind,'gauge');
+ assert.equal(measurementGuidance({...input,diagnostic:'no-signal',now:1000}),null);
  assert.match(measurementGuidance({...input,diagnostic:'no-signal'}).title,/Aucun signal/);
  settle(t);assert.equal(t.snapshot(6000).diagnostic,'paused');
- assert.equal(measurementGuidance({...input,...t.snapshot(6000)}).progress,0);
+ assert.equal(measurementGuidance({...input,...t.snapshot(6000)}),null);
 });
 test('old fault expires; visibility return clears fault and requires fresh samples',()=>{
  const t=new SensorTracker();orient(t,80,0);assert.equal(t.snapshot(4000).diagnostic,'no-signal');
@@ -46,22 +46,10 @@ test('old fault expires; visibility return clears fault and requires fresh sampl
 });
 test('manual mode and unactivated sensors are quiet; activation errors are persistent guidance',()=>{
  assert.equal(measurementGuidance({...input,mode:'manual',accessError:'Refus'}),null);
- assert.equal(measurementGuidance({...input,enabled:false,diagnostic:'no-signal'}).progress,0);
- assert.equal(measurementGuidance({...input,enabled:false,accessError:'Accès refusé'}).kind,'message');
+ assert.equal(measurementGuidance({...input,enabled:false,diagnostic:'no-signal'}),null);
+ assert.match(measurementGuidance({...input,enabled:false,accessError:'Accès refusé'}).title,/Accès/);
 });
-test('diagnostics provide accessible labels and stable state completes the gauge',()=>{
- for(const diagnostic of ['tilted','moving','invalid','stabilizing','paused','waiting','no-signal']){
-  const notice=measurementGuidance({...input,diagnostic});assert.ok(notice.title&&notice.detail);
- }
- assert.equal(measurementGuidance({...input,diagnostic:null,progress:100}).progress,100);
-});
-
-test('progress follows samples, never a timer; movement and stale data reset it',()=>{
- const t=new SensorTracker();for(let time=0;time<=700;time+=50)orient(t,0,time);
- const p=t.snapshot(700).progress;assert.ok(p>0&&p<100);
- assert.equal(t.snapshot(1100).progress,p);
- assert.equal(orient(t,2,750).progress,0);
- for(let time=800;time<=3000;time+=50)orient(t,2,time);
- assert.equal(t.snapshot(3000).progress,100);assert.equal(t.snapshot(6100).progress,0);
- t.suspend(true);assert.equal(t.snapshot(6200).progress,0);
+test('normal acquisition, stable and paused states do not create a stability notice',()=>{
+ for(const diagnostic of ['moving','stabilizing','paused','waiting',null]) assert.equal(measurementGuidance({...input,diagnostic}),null);
+ for(const diagnostic of ['tilted','invalid','no-signal']) assert.ok(measurementGuidance({...input,diagnostic}).title);
 });

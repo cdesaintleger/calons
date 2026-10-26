@@ -18,17 +18,14 @@ for(const engine of ['chromium','webkit']){
   }
   await page.screenshot({path:`${output}/${engine}-${theme}-${width}.png`,animations:'disabled'});
   await page.evaluate(()=>{const e=new Event('deviceorientation');Object.assign(e,{beta:0,gamma:0});dispatchEvent(e);});
-  const acquiring=await page.locator('.measurement-notice').boundingBox();assert.equal(acquiring.height,notice.height);assert.equal(acquiring.y,notice.y);
+  await page.locator('.measurement-notice').waitFor({state:'detached'});
+  assert.equal(await page.locator('.measurement-notice-slot,progress').count(),0);
   await page.evaluate(async()=>{for(let i=0;i<50;i++){const e=new Event('deviceorientation');Object.assign(e,{beta:0,gamma:0});dispatchEvent(e);await new Promise(r=>setTimeout(r,50));}});
-  await page.getByRole('progressbar',{name:'Stabilité'}).waitFor();
-  assert.equal(await page.locator('progress').getAttribute('value'),'100');
-  const stable=await page.locator('.measurement-notice').boundingBox();assert.equal(stable.height,notice.height);assert.equal(stable.y,notice.y);
+  assert.equal(await page.locator('.measurement-notice,.measurement-notice-slot,progress').count(),0);
   await page.screenshot({path:`${output}/${engine}-${theme}-${width}-stable.png`,animations:'disabled'});
-  await page.getByText('Mesure en pause',{exact:true}).waitFor({timeout:7000});
-  const paused=await page.locator('.measurement-notice').boundingBox();assert.equal(paused.height,notice.height);assert.equal(paused.y,notice.y);assert.equal(await page.locator('progress').getAttribute('value'),'0');
   await page.reload();await page.evaluate(()=>window.deny=true);await page.getByRole('button',{name:'Activer le capteur',exact:true}).click();
   await page.getByText('Accès au capteur à vérifier',{exact:true}).waitFor();assert.deepEqual(errors,[]);
-  await page.close();console.log(`${engine}/${theme}: PASS no signal, tilt notice, recovery, pause, permission failure and layout`);
+  await page.close();console.log(`${engine}/${theme}: PASS no signal, tilt notice, recovery without gauge or reserved space, permission failure and layout`);
  }
  }finally{await browser.close();}
 }

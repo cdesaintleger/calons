@@ -26,16 +26,12 @@ mémorisée sur votre appareil.
 Chrome avec des mesures de capteur simulées. Les jauges représentent la correction
 théorique ; les hauteurs et paliers indiquent les cales recommandées.*
 
-## Version 1.3.3 — Jauge de stabilisation
+## Version 1.3.4 — Interface simplifiée
 
-La consigne de placement est remplacée par une jauge lorsque le téléphone est
-à plat. Son remplissage dépend des mesures reçues et devient « Stable » après
-une acquisition cohérente ; il ne progresse pas artificiellement avec le temps.
-Un mouvement relance la stabilisation. Une interruption remet la jauge à zéro,
-sans effacer la dernière mesure. « Stable » ne signifie pas « véhicule à niveau ».
-
-Le bandeau conserve sa hauteur dans les trois thèmes pour éviter les sauts de
-mise en page. Les problèmes d’accès au capteur restent explicitement indiqués.
+La jauge de stabilisation et son espace réservé ont été retirés des trois thèmes.
+La consigne de placement et les alertes utiles du capteur restent disponibles.
+La stabilisation des mesures continue en interne, sans modifier la calibration,
+le calcul des cales ou le guidage sonore.
 
 ## Version 1.3.2 — C comme cale
 
