@@ -7,13 +7,17 @@
     "dev": "vite --host 0.0.0.0",
     "test": "npm run build && node --test",
     "build": "vite build && node scripts/service-worker.mjs",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "android:sync": "VITE_BASE_PATH=/ npm run build && cap sync android"
   },
   "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/core": "8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "8.5.3",
     "vite": "^7.0.0"
   }
 }

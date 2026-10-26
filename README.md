@@ -6,6 +6,12 @@ PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ress
 
 [Ouvrir Calons](https://cdesaintleger.github.io/calons/) · [Dernière release officielle](https://github.com/cdesaintleger/calons/releases/latest)
 
+## Version Android expérimentale
+
+La branche `feat/android-native-test` contient un APK de test avec lecture native
+des capteurs Android. Voir [installation, compilation et recette](ANDROID_TEST.md).
+La version web de production reste inchangée.
+
 ## Aperçu de l’application
 
 Trois thèmes au choix dans **⚙ Paramètres → Apparence**, avec une préférence

@@ -18,7 +18,7 @@ test('generated worker serves navigation and cross-origin-mode assets from offli
 test('production entry uses the configured deployment base', async () => {
  const html = await readFile('dist/index.html', 'utf8');
  const expected = process.env.VITE_BASE_PATH || './';
- const assets = [...html.matchAll(/(?:src|href)="([^"]+\/assets\/[^"]+)"/g)].map(match => match[1]);
+ const assets = [...html.matchAll(/(?:src|href)="([^"]*\/assets\/[^"]+)"/g)].map(match => match[1]);
  assert.ok(assets.length >= 2, 'JS and CSS must be present');
  for (const asset of assets) assert.ok(asset.startsWith(expected + 'assets/'), asset);
  const manifest = JSON.parse(await readFile('dist/manifest.webmanifest', 'utf8'));
