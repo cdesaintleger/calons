@@ -1,3 +1,24 @@
+# v1.3.5 — Correction des sauts de mise en page
+
+- Les consignes remplacent le texte de contexte dans une zone de hauteur constante,
+  au lieu d’insérer un bandeau qui déplace le véhicule.
+- Le bloc « Après calage » garde ses dimensions lorsque « Résultat imparfait »
+  apparaît ou disparaît ; les boutons restent à la même position.
+- Chiffres à largeur constante pour limiter les mouvements visuels des valeurs.
+- Aucune jauge réintroduite ; mesures, calcul des cales et son inchangés.
+
+## Validation
+
+- 50 tests automatisés et build Pages réussis.
+- Nouveau test de régression des bascules rapides de posture et d’avertissement :
+  positions et dimensions identiques dans les trois thèmes, sur Chrome et WebKit,
+  aux largeurs 320 et 390 px.
+- Tests des thèmes et de l’affichage mobile sans défilement réussis.
+- Vidéos fournies examinées ; tests navigateur avec capteurs simulés, sans
+  validation physique Android ou iPhone.
+
+---
+
 # v1.3.4 — Retrait de la jauge de stabilisation
 
 - Suppression de la jauge, du pourcentage et de son espace réservé dans les trois thèmes.

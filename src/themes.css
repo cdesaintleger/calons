@@ -53,3 +53,12 @@ footer.modern-footer{border:0;margin-top:10px;padding:0 0 env(safe-area-inset-bo
 
 
 .modern-status{line-height:18px}
+
+/* Sensor messages replace the subtitle, never insert another row. */
+.measurement-context{height:64px;overflow:auto;margin:0 0 8px;font-size:12px;line-height:1.4;color:var(--muted,#546b62)}
+.measurement-context>p{margin:0!important;min-height:0!important;font-size:12px;line-height:1.4}
+.measurement-context .measurement-notice{display:block;margin:0;padding:0;border:0;border-radius:0;background:none;font-size:12px;line-height:1.4}
+.measurement-context .measurement-notice p{margin:3px 0 0;min-height:0;font-size:11px;line-height:1.45}
+.modern-prediction{height:64px;border:1px solid transparent;font-variant-numeric:tabular-nums}
+.modern-title h1{min-height:1.12em}
+.modern-wheel strong,.wheel-label strong{font-variant-numeric:tabular-nums}

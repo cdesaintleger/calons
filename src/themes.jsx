@@ -25,8 +25,7 @@ export function ModernMeasure({notice,result,error,mode,fresh,stable,raw,enabled
  const title=error?'Mesure inexploitable':!result?(!enabled?'Prêt à vous poser ?':!raw?'En attente du capteur':!cal?'Calibrez le zéro':'En attente'):result.count?`${result.count} cale${result.count>1?'s':''} à placer`:'Aucune cale à placer';
  return <section className="modern-measure">
   <div className={"modern-status "+(!fresh||mode==='manual'?'muted':'')} role="status">{status}</div>
-  <div className="modern-title"><h1>{title}</h1><p>{error||(!result?'Téléphone à plat, haut vers l’avant':mode==='sensor'&&!fresh?'Dernière mesure conservée · non actualisée':mode==='sensor'&&!stable?'Placement provisoire':result.count?'Suivez les paliers indiqués':result.initial<=.2?'Le véhicule est à niveau':'Aucun placement ne réduit davantage la pente')}</p></div>
-  <MeasurementNotice notice={notice}/>
+  <div className="modern-title"><h1>{title}</h1><MeasurementNotice notice={notice} fallback={error||(!result?'Téléphone à plat, haut vers l’avant':mode==='sensor'&&!fresh?'Dernière mesure conservée · non actualisée':mode==='sensor'&&!stable?'Placement provisoire':result.count?'Suivez les paliers indiqués':result.initial<=.2?'Le véhicule est à niveau':'Aucun placement ne réduit davantage la pente')}/></div>
   <div className="modern-map"><span className="modern-front">AVANT ↑</span><Van/>{WHEELS.map((name,i)=>{
    const value=result?.ideal[i],ratio=value==null?0:Math.min(1,value/max);
    const intensity=value==null?'unknown':ratio<.15?'low':ratio<.5?'medium':'high';
@@ -36,7 +35,7 @@ export function ModernMeasure({notice,result,error,mode,fresh,stable,raw,enabled
     <span className="wheel-connector" aria-hidden="true"/>{Boolean(result?.levels[i])&&<span className="ramp-symbol" aria-hidden="true"/>}
    </div>;
   })}<div className="intensity-legend"><span>Faible</span><i/><span>Forte</span><small>Correction théorique</small></div></div>
-  <div className={"modern-prediction "+(result?.residual>.5?'imperfect':'')}><span>Après calage{result?.residual>.5&&<small className="prediction-warning">Résultat imparfait</small>}</span><strong>{result?`≈ ${number(result.residual)}°`:'—'}<small> estimés</small></strong></div>
+  <div className={"modern-prediction "+(result?.residual>.5?'imperfect':'')}><span>Après calage<small className="prediction-warning" style={{visibility:result?.residual>.5?'visible':'hidden'}}>Résultat imparfait</small></span><strong>{result?`≈ ${number(result.residual)}°`:'—'}<small> estimés</small></strong></div>
   <div className="modern-actions">{mode==='sensor'&&!enabled?<button className="primary" onClick={onStart}>Activer le capteur</button>:<button disabled={mode!=='sensor'||!raw} onClick={onCalibrate}>⊕ Calibrer</button>}<button onClick={onHelp}>ⓘ Aide</button></div>
   {(sound.enabled||!sound.label.includes('désactivé'))&&<p className="modern-sound" role="status">{sound.label}</p>}
  </section>;

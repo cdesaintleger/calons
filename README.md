@@ -26,12 +26,12 @@ mémorisée sur votre appareil.
 Chrome avec des mesures de capteur simulées. Les jauges représentent la correction
 théorique ; les hauteurs et paliers indiquent les cales recommandées.*
 
-## Version 1.3.4 — Interface simplifiée
+## Version 1.3.5 — Mise en page stable
 
-La jauge de stabilisation et son espace réservé ont été retirés des trois thèmes.
-La consigne de placement et les alertes utiles du capteur restent disponibles.
-La stabilisation des mesures continue en interne, sans modifier la calibration,
-le calcul des cales ou le guidage sonore.
+La consigne de placement remplace le texte de contexte sans déplacer le véhicule.
+Le bloc « Après calage » conserve sa hauteur avec ou sans avertissement.
+La jauge de stabilisation reste supprimée. Les mesures, la calibration,
+le calcul des cales et le guidage sonore sont inchangés.
 
 ## Version 1.3.2 — C comme cale
 
