@@ -19,3 +19,23 @@ test('browser and Apple icons resolve locally and are precached',async()=>{
  }
  assert.ok(sw.includes('logo.svg'));
 });
+test('Android adaptive icon preserves the web mark and its maskable framing',async()=>{
+ const root='android/app/src/main/res/';
+ const vector=await readFile(root+'drawable/calons_launcher_foreground.xml','utf8');
+ const web=await readFile('public/logo.svg','utf8');
+ assert.deepEqual([...vector.matchAll(/android:pathData="([^"]+)"/g)].map(m=>m[1]),[...web.matchAll(/ d="([^"]+)"/g)].map(m=>m[1]));
+ const attr=name=>Number(vector.match(new RegExp(`android:${name}="([^"]+)"`))[1]);
+ const visible=72,webSize=512,webScale=.8;
+ for(const axis of ['X','Y']){
+  assert.equal(attr('scale'+axis),visible/webSize*webScale);
+  assert.equal(attr('translate'+axis),54-webSize/2*attr('scale'+axis));
+ }
+ assert.equal(attr('viewportWidth'),108);assert.equal(attr('viewportHeight'),108);
+ for(const name of ['ic_launcher','ic_launcher_round']){
+  const xml=await readFile(root+`mipmap-anydpi-v26/${name}.xml`,'utf8');
+  assert.ok(xml.includes('@drawable/calons_launcher_foreground'));
+  assert.ok(xml.includes('@color/ic_launcher_background'));
+ }
+ assert.ok((await readFile(root+'values/ic_launcher_background.xml','utf8')).includes('#062941'));
+ for(const color of ['#fff9ec','#00c9c5'])assert.ok(vector.includes(color)&&web.includes(color));
+});

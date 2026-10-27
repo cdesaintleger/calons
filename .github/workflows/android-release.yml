@@ -45,7 +45,7 @@ jobs:
       - name: Verify release APK
         run: |
           mkdir -p apk
-          cp android/app/build/outputs/apk/release/app-release.apk apk/Calons-1.4.0.apk
+          cp android/app/build/outputs/apk/release/app-release.apk apk/Calons-1.4.1.apk
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs apk/*.apk | tee apk/signature.txt
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging apk/*.apk > apk/package-info.txt
           if grep -q 'application-debuggable' apk/package-info.txt; then exit 1; fi

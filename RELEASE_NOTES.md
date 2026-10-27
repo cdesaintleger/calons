@@ -1,3 +1,19 @@
+# Android 1.4.1 — Icône complète
+
+- Même dessin que la version web : C ivoire et cale turquoise sur bleu pétrole.
+- Marges adaptées aux icônes Android pour éviter le logo agrandi et rogné.
+- Mise à jour directe de 1.4.0, avec la même signature et le même identifiant :
+  réglages et calibration conservés si l’application n’est pas désinstallée.
+- Capteurs, interface, calcul des cales et son inchangés.
+
+## Validation
+
+Tests automatisés, build Android release et signature vérifiés avant publication.
+Vérification du dessin et du cadrage par simulation du masque circulaire ;
+l’affichage sur les lanceurs de téléphones réels reste à confirmer.
+
+---
+
 # Android 1.4.0 — Première version finale
 
 - APK de publication signé, non débogable, nommé **Calons**.

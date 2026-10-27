@@ -8,7 +8,7 @@ PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ress
 
 ## Application Android
 
-Version Android finale 1.4.0 avec capteurs natifs, ressources embarquées et
+Version Android finale 1.4.1 avec capteurs natifs, ressources embarquées et
 signature de publication durable. Voir [installation et compilation](ANDROID_RELEASE.md).
 Elle ajoute une zone sûre pour la barre d’état et la signature de l’auteur,
 Christophe de saint leger. La version web reste disponible séparément.

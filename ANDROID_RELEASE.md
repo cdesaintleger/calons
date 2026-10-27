@@ -1,4 +1,4 @@
-# Calons Android 1.4.0
+# Calons Android 1.4.1
 
 APK de publication, signé avec une clé de production durable, non débogable.
 Application « Calons », identifiant `fr.calons.app`, Android 7/API 24 minimum.
@@ -6,7 +6,7 @@ L’interface React est embarquée avec Capacitor ; les capteurs sont lus native
 
 ## Installation
 
-Télécharger `Calons-1.4.0.apk` depuis la release Android, ouvrir le fichier sur le
+Télécharger `Calons-1.4.1.apk` depuis la release Android, ouvrir le fichier sur le
 téléphone et autoriser cette installation depuis le navigateur si Android le demande.
 L’application fonctionne hors ligne dès l’installation.
 
@@ -15,7 +15,13 @@ calibration et saisir la configuration du véhicule : leurs données ne sont pas
 transférées automatiquement. Les futures versions de `fr.calons.app` utiliseront
 la même clé et un code de version croissant pour permettre une mise à jour normale.
 
+Mise à jour depuis 1.4.0 : installer directement cet APK, sans désinstaller Calons,
+pour conserver les réglages et la calibration.
+
 ## Changements
+
+- Cadrage de l’icône Android corrigé : logo web complet, avec les marges adaptées
+  aux masques des lanceurs Android et un fond bleu pétrole uniforme.
 
 - Prise en compte des marges réelles de la barre d’état, des encoches et de la
   navigation Android, grâce aux variables de zone sûre de Capacitor 8.
@@ -46,7 +52,7 @@ La clé privée n’est jamais incluse dans ces livrables.
 
 ## Vérification
 
-53 tests JavaScript, tests Java des axes et contrôles Chrome/WebKit des zones
+54 tests JavaScript, tests Java des axes et contrôles Chrome/WebKit des zones
 sûres, sur 320×740 et 390×844 avec marges supérieures 0/32/48 px. Ces contrôles
 simulent les marges système et ne constituent pas une validation physique de
 cette nouvelle version. La fluidité de la version native précédente a été

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same mark as public/logo.svg. Android displays the central 72dp of a
+     108dp adaptive layer. Scale 72/512 * .8 reproduces the web maskable icon;
+     the complete mark remains inside Android's central 66dp safe circle. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:scaleX="0.1125" android:scaleY="0.1125"
+        android:translateX="25.2" android:translateY="25.2">
+        <path android:pathData="M351 143 A149 149 0 1 0 247 398"
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#fff9ec" android:strokeWidth="67"
+            android:strokeLineCap="butt"/>
+        <path android:pathData="M243 430 L296 396 L296 369 Q296 362 303 362 H335 V339 Q335 332 342 332 H374 V306 Q374 299 381 299 H419 Q426 299 426 306 V423 Q426 430 419 430 Z"
+            android:fillColor="#00c9c5"/>
+    </group>
+</vector>
