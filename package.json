@@ -1,12 +1,12 @@
 {
   "name": "ducato-level",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "test": "npm run build && node --test",
-    "build": "vite build && node scripts/service-worker.mjs",
+    "build": "node scripts/privacy-page.mjs && vite build && node scripts/service-worker.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "android:sync": "VITE_BASE_PATH=/ npm run build && cap sync android"
   },

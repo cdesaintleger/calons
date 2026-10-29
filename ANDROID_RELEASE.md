@@ -1,4 +1,4 @@
-# Calons Android 1.4.1
+# Calons Android 1.4.2
 
 APK de publication, signé avec une clé de production durable, non débogable.
 Application « Calons », identifiant `fr.calons.app`, Android 7/API 24 minimum.
@@ -6,7 +6,7 @@ L’interface React est embarquée avec Capacitor ; les capteurs sont lus native
 
 ## Installation
 
-Télécharger `Calons-1.4.1.apk` depuis la release Android, ouvrir le fichier sur le
+Télécharger `Calons-1.4.2.apk` depuis la release Android, ouvrir le fichier sur le
 téléphone et autoriser cette installation depuis le navigateur si Android le demande.
 L’application fonctionne hors ligne dès l’installation.
 
@@ -44,7 +44,7 @@ VITE_BASE_PATH=/ npm test
 npx cap sync android
 cd android
 # Fournir CALONS_KEYSTORE_PATH et CALONS_KEY_PASSWORD dans l’environnement privé.
-./gradlew testReleaseUnitTest assembleRelease
+./gradlew testReleaseUnitTest assembleRelease bundleRelease
 ```
 
 L’APK, son SHA-256 et le rapport public de signature sont joints à la release.
@@ -62,3 +62,5 @@ Sur téléphone : vérifier que le logo et les boutons se trouvent sous l’heur
 la batterie et l’encoche ; essayer les trois thèmes et les paramètres ; vérifier
 l’auteur en bas. Calibrer à plat, activer le son puis tester la reprise après
 arrière-plan et le fonctionnement hors ligne.
+
+Le bundle `Calons-1.4.2.aab` sert à Google Play ; l’APK sert à l’installation directe. Voir [le guide Google Play](docs/google-play/README.md).

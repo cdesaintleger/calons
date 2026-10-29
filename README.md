@@ -8,7 +8,7 @@ PWA React/Vite en français, mobile, sans compte ni serveur applicatif. Les ress
 
 ## Application Android
 
-Version Android finale 1.4.1 avec capteurs natifs, ressources embarquées et
+Version Android finale 1.4.2 avec capteurs natifs, ressources embarquées et
 signature de publication durable. Voir [installation et compilation](ANDROID_RELEASE.md).
 Elle ajoute une zone sûre pour la barre d’état et la signature de l’auteur,
 Christophe de saint leger. La version web reste disponible séparément.
@@ -350,3 +350,8 @@ Validation automatisée uniquement pour les capteurs de cette release : aucun te
 physique Android/iPhone ni contrôle de précision sur véhicule n'est revendiqué.
 Références : [axes et événements W3C](https://www.w3.org/TR/orientation-event/),
 [gravité et limites de l'accéléromètre](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/accelerationIncludingGravity).
+
+## Publication Google Play
+
+Voir le [dossier de publication](docs/google-play/README.md), ses visuels et textes français.
+[Politique de confidentialité](https://cdesaintleger.github.io/calons/privacy.html).

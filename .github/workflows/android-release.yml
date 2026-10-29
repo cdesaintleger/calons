@@ -41,16 +41,20 @@ jobs:
         env:
           CALONS_KEYSTORE_PATH: ${{ runner.temp }}/calons-release.p12
           CALONS_KEY_PASSWORD: ${{ secrets.CALONS_ANDROID_KEY_PASSWORD }}
-        run: ./gradlew --no-daemon testReleaseUnitTest assembleRelease
+        run: ./gradlew --no-daemon testReleaseUnitTest assembleRelease bundleRelease
       - name: Verify release APK
         run: |
           mkdir -p apk
-          cp android/app/build/outputs/apk/release/app-release.apk apk/Calons-1.4.1.apk
+          cp android/app/build/outputs/apk/release/app-release.apk apk/Calons-1.4.2.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab apk/Calons-1.4.2.aab
+          jarsigner -verify apk/Calons-1.4.2.aab | tee apk/bundle-signature.txt
+          grep -q 'jar verified' apk/bundle-signature.txt
+          keytool -printcert -jarfile apk/Calons-1.4.2.aab > apk/bundle-certificate.txt
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs apk/*.apk | tee apk/signature.txt
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging apk/*.apk > apk/package-info.txt
           if grep -q 'application-debuggable' apk/package-info.txt; then exit 1; fi
           cd apk
-          sha256sum *.apk > SHA256SUMS.txt
+          sha256sum *.apk *.aab > SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
           name: calons-android-release

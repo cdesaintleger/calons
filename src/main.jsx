@@ -11,6 +11,7 @@ import './themes.css';
 import { measurementGuidance } from './guidance.js';
 import { MeasurementNotice } from './MeasurementNotice.jsx';
 import { version } from '../package.json';
+import privacyPolicy from './privacy-policy.html?raw';
 const cm=value=>value.toLocaleString('fr-FR',{minimumFractionDigits:1,maximumFractionDigits:1});
 const defaults={wheelbase:403.5,track:181,maxLevel:3,heights:[7,14,21]};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
@@ -82,7 +83,7 @@ function App(){
  <button className="settings-toggle card" onClick={()=>setPreferences(true)}>⚙ Paramètres · thème et véhicule</button>
  <p className="field-note"><b>Le bon réflexe</b>Utilisez des cales homologuées sur un sol stable, immobilisez le véhicule et vérifiez à nouveau le niveau après placement. Recalculez uniquement après retrait des cales.</p></aside></div>}
  {message&&<div className="message" role="status"><span>{message}</span><button aria-label="Fermer le message" onClick={()=>setMessage('')}>×</button></div>}
- <SettingsDialog open={preferences} title="Paramètres" onClose={()=>setPreferences(false)}>{message&&<p role="status">{message}</p>}<ThemePicker value={theme} onChange={value=>{setTheme(value);save('calons-theme',value)}}/>{vehicleSettings}{advancedControls}<button className="install-button" disabled={installed} onClick={installApp}>{installed?'✓ Application installée':'Installer l’application'}</button></SettingsDialog>
+ <SettingsDialog open={preferences} title="Paramètres" onClose={()=>setPreferences(false)}>{message&&<p role="status">{message}</p>}<ThemePicker value={theme} onChange={value=>{setTheme(value);save('calons-theme',value)}}/>{vehicleSettings}{advancedControls}<details className="advanced"><summary>Confidentialité</summary><div dangerouslySetInnerHTML={{__html:privacyPolicy}}/></details><button className="install-button" disabled={installed} onClick={installApp}>{installed?'✓ Application installée':'Installer l’application'}</button></SettingsDialog>
  <SettingsDialog open={help} title="Placement et calibration" onClose={()=>setHelp(false)}><p>Posez le téléphone écran vers le haut, en portrait, son haut vers l’avant du véhicule. Mesurez à l’arrêt, sans cales.</p><p>Calibrez uniquement sur une surface connue horizontale. Conservez ensuite la même orientation.</p><p>Les jauges indiquent la correction théorique, les hauteurs et paliers indiquent les cales à placer. Un placement peut rester imparfait.</p><p>Utilisez des cales homologuées sur un sol stable, immobilisez le véhicule et vérifiez le niveau après placement. Recalculez après retrait des cales.</p></SettingsDialog>
  <footer className={theme==='classic'?'':'modern-footer'}><button className="primary install-button" disabled={installed} onClick={installApp}>{installed?'✓ Application installée':'↓ Installer l’application'}</button><span className="footer-credit">CALONS v{version} · L’essentiel, même loin du réseau.<small className="author-credit">Par Christophe de saint leger</small></span></footer>
  </main>

@@ -1,3 +1,15 @@
+# Android 1.4.2 — Préparation Google Play
+
+- Bundle Android App Bundle (.aab) signé, en plus de l’APK d’installation directe.
+- Politique de confidentialité consultable hors ligne dans les paramètres des trois thèmes.
+- Contact public : christophe@lindev.fr.
+- Dossier de publication en français : descriptions, visuels et guide de test fermé.
+- Mesures, calibration, calcul des cales et guidage sonore inchangés.
+
+Validation : tests JavaScript et Android, compilation APK/AAB et signature vérifiés avant publication. Captures de présentation obtenues avec capteurs simulés ; aucune nouvelle validation physique revendiquée. La présence du bundle sur GitHub ne constitue pas une publication Google Play.
+
+---
+
 # Android 1.4.1 — Icône complète
 
 - Même dessin que la version web : C ivoire et cale turquoise sur bleu pétrole.
